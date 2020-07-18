@@ -28,6 +28,8 @@ class TagerPages extends Migration
 
             $table->string('page_title')->nullable();
             $table->text('page_description')->nullable();
+            $table->string('open_graph_title')->nullable();
+            $table->text('open_graph_description')->nullable();
             $table->unsignedBigInteger('open_graph_image_id')->nullable();
 
             $table->timestamps();

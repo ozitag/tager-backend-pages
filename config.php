@@ -5,4 +5,7 @@ return [
         'page_image' => '',
         'open_graph' => ''
     ],
+    'templates' => [
+        
+    ]
 ];

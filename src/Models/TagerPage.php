@@ -27,6 +27,8 @@ class TagerPage extends Model
         'content',
         'page_title',
         'page_description',
+        'open_graph_title',
+        'open_graph_description',
         'open_graph_image_id'
     ];
 }
