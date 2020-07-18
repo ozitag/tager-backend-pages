@@ -1,6 +1,6 @@
 <?php
 
-namespace OZiTAG\Tager\Backend\Blog;
+namespace OZiTAG\Tager\Backend\Pages;
 
 use Illuminate\Support\ServiceProvider;
 
@@ -28,7 +28,7 @@ class TagerBackendPagesServiceProvider extends ServiceProvider
         $this->loadMigrationsFrom(__DIR__ . '/../migrations');
 
         $this->publishes([
-            __DIR__ . '/../config.php' => config_path('tager-blog.php'),
+            __DIR__ . '/../config.php' => config_path('tager-pages.php'),
         ]);
     }
 }
