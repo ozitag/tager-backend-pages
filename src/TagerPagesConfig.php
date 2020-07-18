@@ -23,4 +23,9 @@ class TagerPagesConfig
     {
         return self::getStorageScenario('open_graph');
     }
+
+    public static function getTemplatesConfig()
+    {
+        return self::config('templates', []);
+    }
 }
