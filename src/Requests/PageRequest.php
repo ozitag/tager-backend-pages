@@ -11,12 +11,12 @@ class PageRequest extends FormRequest
     {
         return [
             'template' => 'nullable|string',
-            'title' => 'string|required',
-            'urlAlias' => 'string|required',
+            'title' => 'required|string',
+            'urlPath' => ['required', 'string', 'unique:tager_pages,url_path,' . $this->route('id', 0) . ',id,deleted_at,NULL'],
             'parent' => 'nullable|number',
             'image' => ['nullable', 'numeric', new FileRule()],
             'excerpt' => 'nullable|string',
-            'content' => 'nullable|string',
+            'body' => 'nullable|string',
             'pageTitle' => 'nullable|string',
             'pageDescription' => 'nullable|string',
             'openGraphTitle' => 'nullable|string',

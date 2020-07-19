@@ -16,4 +16,9 @@ class PagesRepository extends EloquentRepository
     {
         return TagerPage::whereAlias($alias)->first();
     }
+
+    public function findByUrlPath($urlPath)
+    {
+        return TagerPage::whereUrlPath($urlPath)->first();
+    }
 }

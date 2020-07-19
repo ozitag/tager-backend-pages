@@ -17,15 +17,16 @@ class AdminPageFullResource extends JsonResource
             'template' => $this->template,
             'title' => $this->title,
             'urlAlias' => $this->url_alias,
+            'urlPath' => $this->url_path,
             'parent' => $this->parent_id,
-            'image' => $this->image ? $this->image->getJson() : null,
+            'image' => $this->image ? $this->image->getShortJson() : null,
             'excerpt' => $this->excerpt,
-            'content' => $this->content,
+            'body' => $this->body,
             'pageTitle' => $this->page_title,
             'pageDescription' => $this->page_description,
             'openGraphTitle' => $this->open_graph_title,
             'openGraphDescription' => $this->open_graph_description,
-            'openGraphImage' => $this->openGraphImage ? $this->openGraphImage->getJson() : null,
+            'openGraphImage' => $this->openGraphImage ? $this->openGraphImage->getShortJson() : null,
             'templateValues' => []
         ];
     }

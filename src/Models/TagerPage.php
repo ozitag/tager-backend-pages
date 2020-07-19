@@ -4,6 +4,8 @@ namespace OZiTAG\Tager\Backend\Pages\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Ozerich\FileStorage\Models\File;
+use OZiTAG\Tager\Backend\Mail\Models\TagerMailTemplate;
 
 class TagerPage extends Model
 {
@@ -19,16 +21,25 @@ class TagerPage extends Model
     protected $fillable = [
         'parent_id',
         'template',
-        'name',
-        'url_alias',
         'url_path',
         'image_id',
+        'title',
         'excerpt',
-        'content',
+        'body',
         'page_title',
         'page_description',
         'open_graph_title',
         'open_graph_description',
         'open_graph_image_id'
     ];
+
+    public function image()
+    {
+        return $this->belongsTo(File::class);
+    }
+
+    public function openGraphImage()
+    {
+        return $this->belongsTo(File::class);
+    }
 }

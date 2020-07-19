@@ -17,14 +17,13 @@ class TagerPages extends Migration
             $table->id();
             $table->unsignedBigInteger('parent_id')->nullable();
             $table->string('template')->nullable();
-
-            $table->string('name');
-            $table->string('url_alias');
             $table->string('url_path');
 
-            $table->unsignedBigInteger('image_id')->nullable();
+            $table->string('title');
             $table->text('excerpt')->nullable();
-            $table->longText('content')->nullable();
+            $table->longText('body')->nullable();
+
+            $table->unsignedBigInteger('image_id')->nullable();
 
             $table->string('page_title')->nullable();
             $table->text('page_description')->nullable();
