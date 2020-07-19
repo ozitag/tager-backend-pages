@@ -3,6 +3,7 @@
 namespace OZiTAG\Tager\Backend\Pages\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use OZiTAG\Tager\Backend\Seo\Resources\SeoParamsResource;
 
 class PageFullResource extends JsonResource
 {
@@ -33,6 +34,8 @@ class PageFullResource extends JsonResource
             'path' => $this->parent->url_path
         ] : null;
 
+        $seoParams = new SeoParamsResource($this->page_title, $this->page_description, $this->openGraphImage, $this->open_graph_title, $this->open_graph_description);
+
         return [
             'id' => $this->id,
             'template' => $this->template,
@@ -42,11 +45,7 @@ class PageFullResource extends JsonResource
             'image' => $this->image ? $this->image->getShortJson() : null,
             'excerpt' => $this->excerpt,
             'body' => $this->body,
-            'pageTitle' => $this->page_title,
-            'pageDescription' => $this->page_description,
-            'openGraphTitle' => $this->open_graph_title,
-            'openGraphDescription' => $this->open_graph_description,
-            'openGraphImage' => $this->openGraphImage ? $this->openGraphImage->getShortJson() : null,
+            'seoParams' => $seoParams,
             'templateValues' => $this->getTemplateValuesJson()
         ];
     }
