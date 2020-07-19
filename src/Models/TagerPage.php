@@ -33,6 +33,11 @@ class TagerPage extends Model
         'open_graph_image_id'
     ];
 
+    public function parent()
+    {
+        return $this->belongsTo(self::class);
+    }
+
     public function image()
     {
         return $this->belongsTo(File::class);

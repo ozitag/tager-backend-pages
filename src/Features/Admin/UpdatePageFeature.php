@@ -4,8 +4,14 @@ namespace OZiTAG\Tager\Backend\Pages\Features\Admin;
 
 use OZiTAG\Tager\Backend\Core\Feature;
 use OZiTAG\Tager\Backend\Core\SuccessResource;
+use OZiTAG\Tager\Backend\Pages\Jobs\CreatePageJob;
 use OZiTAG\Tager\Backend\Pages\Jobs\GetPageByIdJob;
+use OZiTAG\Tager\Backend\Pages\Jobs\SetPageMainParamsJob;
+use OZiTAG\Tager\Backend\Pages\Jobs\SetPageSeoParamsJob;
+use OZiTAG\Tager\Backend\Pages\Jobs\UpdatePageJob;
 use OZiTAG\Tager\Backend\Pages\Requests\PageRequest;
+use OZiTAG\Tager\Backend\Pages\Requests\UpdatePageRequest;
+use OZiTAG\Tager\Backend\Pages\Resources\AdminPageFullResource;
 
 class UpdatePageFeature extends Feature
 {
@@ -16,10 +22,37 @@ class UpdatePageFeature extends Feature
         $this->id = $id;
     }
 
-    public function handle(PageRequest $pageRequest)
+    public function handle(UpdatePageRequest $request)
     {
         $model = $this->run(GetPageByIdJob::class, ['id' => $this->id]);
 
-        return new SuccessResource();
+        $page = $this->run(UpdatePageJob::class, [
+            'model' => $model,
+            'urlPath' => $request->urlPath,
+            'parentId' => $request->parent,
+            'title' => $request->title
+        ]);
+
+        if (!$page) {
+            abort('400', 'Create page failed');
+        }
+
+        $page = $this->run(SetPageMainParamsJob::class, [
+            'model' => $page,
+            'excerpt' => $request->excerpt,
+            'body' => $request->body,
+            'imageId' => $request->image
+        ]);
+
+        $page = $this->run(SetPageSeoParamsJob::class, [
+            'model' => $page,
+            'title' => $request->pageTitle,
+            'description' => $request->pageDescription,
+            'openGraphTitle' => $request->openGraphTitle,
+            'openGraphDescription' => $request->openGraphDescription,
+            'openGraphImageId' => $request->openGraphImage
+        ]);
+
+        return new AdminPageFullResource($page);
     }
 }

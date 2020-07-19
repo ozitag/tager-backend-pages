@@ -5,6 +5,7 @@ namespace OZiTAG\Tager\Backend\Pages\Features\Admin;
 use OZiTAG\Tager\Backend\Core\Feature;
 use OZiTAG\Tager\Backend\Core\SuccessResource;
 use OZiTAG\Tager\Backend\Pages\Jobs\GetPageByIdJob;
+use OZiTAG\Tager\Backend\Pages\Resources\AdminPageFullResource;
 
 class ViewPageFeature extends Feature
 {
@@ -19,6 +20,6 @@ class ViewPageFeature extends Feature
     {
         $model = $this->run(GetPageByIdJob::class, ['id' => $this->id]);
 
-        return new SuccessResource();
+        return new AdminPageFullResource($model);
     }
 }

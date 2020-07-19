@@ -16,7 +16,7 @@ class AdminPageResource extends JsonResource
             'id' => $this->id,
             'title' => $this->title,
             'image' => $this->image ? $this->image->getUrl() : null,
-            'url' => '/' . $this->urlAlias
+            'url' => $this->url_path
         ];
     }
 }

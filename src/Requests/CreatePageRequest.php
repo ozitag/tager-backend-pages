@@ -3,17 +3,18 @@
 namespace OZiTAG\Tager\Backend\Pages\Requests;
 
 use Ozerich\FileStorage\Rules\FileRule;
+use OZiTAG\Tager\Backend\Blog\Models\BlogCategory;
 use OZiTAG\Tager\Backend\Core\FormRequest;
 
-class PageRequest extends FormRequest
+class CreatePageRequest extends FormRequest
 {
     public function rules()
     {
         return [
             'template' => 'nullable|string',
             'title' => 'required|string',
-            'urlPath' => ['required', 'string', 'unique:tager_pages,url_path,' . $this->route('id', 0) . ',id,deleted_at,NULL'],
-            'parent' => 'nullable|number',
+            'urlPath' => ['nullable', 'string', 'unique:tager_pages,url_path,0,id,deleted_at,NULL'],
+            'parent' => ['nullable', 'integer', 'exists:tager_pages,id'],
             'image' => ['nullable', 'numeric', new FileRule()],
             'excerpt' => 'nullable|string',
             'body' => 'nullable|string',

@@ -19,7 +19,7 @@ class GetPageByIdJob
         $model = $repository->find($this->id);
 
         if (!$model) {
-            abort(404, 'Menu not found');
+            abort(404, 'Page not found');
         }
 
         return $model;
