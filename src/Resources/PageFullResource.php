@@ -3,15 +3,8 @@
 namespace OZiTAG\Tager\Backend\Pages\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
-use Ozerich\FileStorage\Models\File;
-use OZiTAG\Tager\Backend\Mail\Models\TagerMailTemplate;
-use OZiTAG\Tager\Backend\Mail\Utils\TagerMailConfig;
-use OZiTAG\Tager\Backend\Pages\Enums\FieldType;
-use OZiTAG\Tager\Backend\Pages\Models\TagerPage;
-use OZiTAG\Tager\Backend\Pages\Repositories\PagesRepository;
-use OZiTAG\Tager\Backend\Seo\Models\SeoPage;
 
-class AdminPageFullResource extends JsonResource
+class PageFullResource extends JsonResource
 {
     private function getTemplateValuesJson()
     {
@@ -37,8 +30,8 @@ class AdminPageFullResource extends JsonResource
         $parentJson = $this->parent ? [
             'id' => $this->parent->id,
             'title' => $this->parent->title,
+            'path' => $this->parent->url_path
         ] : null;
-
 
         return [
             'id' => $this->id,

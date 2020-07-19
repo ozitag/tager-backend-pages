@@ -2,6 +2,10 @@
 
 use Illuminate\Support\Facades\Route;
 
+Route::get('/tager/pages', \OZiTAG\Tager\Backend\Pages\Controllers\PublicController::class . '@index');
+Route::get('/tager/pages/{id}', \OZiTAG\Tager\Backend\Pages\Controllers\PublicController::class . '@viewById');
+Route::get('/tager/pages/view', \OZiTAG\Tager\Backend\Pages\Controllers\PublicController::class . '@viewByPath');
+
 Route::group(['prefix' => 'admin/pages', 'middleware' => ['passport:administrators', 'auth:api']], function () {
     Route::get('/templates', \OZiTAG\Tager\Backend\Pages\Controllers\AdminController::class . '@templates');
     Route::get('/templates/{alias}', \OZiTAG\Tager\Backend\Pages\Controllers\AdminController::class . '@viewTemplate');
