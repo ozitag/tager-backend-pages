@@ -2,9 +2,9 @@
 
 namespace OZiTAG\Tager\Backend\Pages;
 
-use Illuminate\Support\ServiceProvider;
+use Illuminate\Foundation\Support\Providers\RouteServiceProvider;
 
-class TagerBackendPagesServiceProvider extends ServiceProvider
+class TagerBackendPagesServiceProvider extends RouteServiceProvider
 {
     /**
      * Register any application services.
@@ -30,5 +30,7 @@ class TagerBackendPagesServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__ . '/../config.php' => config_path('tager-pages.php'),
         ]);
+
+        parent::boot();
     }
 }
