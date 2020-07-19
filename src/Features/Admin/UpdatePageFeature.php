@@ -8,6 +8,7 @@ use OZiTAG\Tager\Backend\Pages\Jobs\CreatePageJob;
 use OZiTAG\Tager\Backend\Pages\Jobs\GetPageByIdJob;
 use OZiTAG\Tager\Backend\Pages\Jobs\SetPageMainParamsJob;
 use OZiTAG\Tager\Backend\Pages\Jobs\SetPageSeoParamsJob;
+use OZiTAG\Tager\Backend\Pages\Jobs\SetPageTemplateJob;
 use OZiTAG\Tager\Backend\Pages\Jobs\UpdatePageJob;
 use OZiTAG\Tager\Backend\Pages\Requests\PageRequest;
 use OZiTAG\Tager\Backend\Pages\Requests\UpdatePageRequest;
@@ -51,6 +52,12 @@ class UpdatePageFeature extends Feature
             'openGraphTitle' => $request->openGraphTitle,
             'openGraphDescription' => $request->openGraphDescription,
             'openGraphImageId' => $request->openGraphImage
+        ]);
+
+        $page = $this->run(SetPageTemplateJob::class, [
+            'model' => $page,
+            'template' => $request->template,
+            'fields' => $request->templateFields
         ]);
 
         return new AdminPageFullResource($page);

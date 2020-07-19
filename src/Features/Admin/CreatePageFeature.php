@@ -11,6 +11,7 @@ use OZiTAG\Tager\Backend\Pages\Jobs\GetPageUrlPathJob;
 use OZiTAG\Tager\Backend\Pages\Jobs\SetPageMainParams;
 use OZiTAG\Tager\Backend\Pages\Jobs\SetPageMainParamsJob;
 use OZiTAG\Tager\Backend\Pages\Jobs\SetPageSeoParamsJob;
+use OZiTAG\Tager\Backend\Pages\Jobs\SetPageTemplateJob;
 use OZiTAG\Tager\Backend\Pages\Requests\CreatePageRequest;
 use OZiTAG\Tager\Backend\Pages\Requests\PageRequest;
 use OZiTAG\Tager\Backend\Pages\Resources\AdminPageFullResource;
@@ -50,6 +51,13 @@ class CreatePageFeature extends Feature
                 'openGraphDescription' => $request->openGraphDescription,
                 'openGraphImageId' => $request->openGraphImage
             ]);
+
+            $page = $this->run(SetPageTemplateJob::class, [
+                'model' => $page,
+                'template' => $request->template,
+                'fields' => $request->templateFields
+            ]);
+
         } catch (\Exception $exception) {
             $page->delete();
             throw $exception;

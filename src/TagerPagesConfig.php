@@ -28,4 +28,10 @@ class TagerPagesConfig
     {
         return self::config('templates', []);
     }
+
+    public static function getTemplateConfig($template)
+    {
+        $items = self::config('templates', []);
+        return isset($items[$template]) ? $items[$template] : null;
+    }
 }

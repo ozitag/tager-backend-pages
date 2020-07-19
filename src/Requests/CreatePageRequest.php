@@ -5,13 +5,14 @@ namespace OZiTAG\Tager\Backend\Pages\Requests;
 use Ozerich\FileStorage\Rules\FileRule;
 use OZiTAG\Tager\Backend\Blog\Models\BlogCategory;
 use OZiTAG\Tager\Backend\Core\FormRequest;
+use OZiTAG\Tager\Backend\Pages\Rules\TemplateRule;
 
 class CreatePageRequest extends FormRequest
 {
     public function rules()
     {
         return [
-            'template' => 'nullable|string',
+            'template' => ['nullable', 'string', new TemplateRule()],
             'title' => 'required|string',
             'urlPath' => ['nullable', 'string', 'unique:tager_pages,url_path,0,id,deleted_at,NULL'],
             'parent' => ['nullable', 'integer', 'exists:tager_pages,id'],
