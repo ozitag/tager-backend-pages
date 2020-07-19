@@ -2,6 +2,8 @@
 
 namespace OZiTAG\Tager\Backend\Pages;
 
+use OZiTAG\Tager\Backend\Pages\Enums\FieldType;
+
 class TagerPagesConfig
 {
     private static function config($param = null, $default = null)
@@ -33,5 +35,15 @@ class TagerPagesConfig
     {
         $items = self::config('templates', []);
         return isset($items[$template]) ? $items[$template] : null;
+    }
+
+    public static function getField($template, $field)
+    {
+        $templateModel = self::getTemplateConfig($template);
+        if (!$templateModel || !isset($templateModel['fields'][$field])) {
+            return null;
+        }
+
+        return $templateModel['fields'][$field];
     }
 }

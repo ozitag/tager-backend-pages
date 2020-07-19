@@ -22,10 +22,10 @@ class TagerPageField extends Model
         'page_id',
         'field',
         'value',
-        'image_id'
+        'file_id'
     ];
 
-    public function image()
+    public function file()
     {
         return $this->belongsTo(File::class);
     }

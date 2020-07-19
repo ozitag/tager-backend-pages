@@ -3,8 +3,13 @@
 namespace OZiTAG\Tager\Backend\Pages\Jobs;
 
 use Illuminate\Queue\Jobs\Job;
+use Ozerich\FileStorage\Repositories\FileRepository;
+use Ozerich\FileStorage\Repositories\IFileRepository;
+use Ozerich\FileStorage\Storage;
+use OZiTAG\Tager\Backend\Pages\Enums\FieldType;
 use OZiTAG\Tager\Backend\Pages\Exceptions\InvalidUrlPathException;
 use OZiTAG\Tager\Backend\Pages\Models\TagerPage;
+use OZiTAG\Tager\Backend\Pages\Repositories\PageFieldsRepository;
 use OZiTAG\Tager\Backend\Pages\Repositories\PagesRepository;
 use OZiTAG\Tager\Backend\Pages\TagerPagesConfig;
 
@@ -24,7 +29,7 @@ class SetPageTemplateJob
         $this->fields = $fields;
     }
 
-    public function handle()
+    public function handle(PageFieldsRepository $repository, IFileRepository $fileRepository, Storage $storage)
     {
         $template = TagerPagesConfig::getTemplateConfig($this->template);
         if (!$template) {
@@ -33,6 +38,41 @@ class SetPageTemplateJob
 
         $this->model->template = $this->template;
         $this->model->save();
+
+        $repository->removeByPageId($this->model->id);
+
+        foreach ($this->fields as $fieldItem) {
+            $configField = TagerPagesConfig::getField($this->template, $fieldItem['field']);
+            if (!$configField) {
+                continue;
+            }
+
+            $value = $fieldItem['value'] ?? null;
+            $fileId = null;
+
+            if (isset($configField['type']) && ($configField['type'] == FieldType::File || $configField['type'] == FieldType::Image)) {
+                $fileModel = $fileRepository->find($value);
+
+                if (!$fileModel) {
+                    continue;
+                }
+
+                $scenario = $configField['params']['scenario'] ?? null;
+                if ($scenario) {
+                    $storage->setFileScenario($fieldItem['value'], $scenario);
+                }
+
+                $fileId = $fileModel->id;
+                $value = null;
+            }
+
+            $repository->create([
+                'page_id' => $this->model->id,
+                'field' => $fieldItem['field'],
+                'value' => $value,
+                'file_id' => $fileId
+            ]);
+        }
 
         return $this->model;
     }

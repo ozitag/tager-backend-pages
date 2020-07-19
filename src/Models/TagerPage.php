@@ -49,6 +49,6 @@ class TagerPage extends Model
 
     public function templateFields()
     {
-        return $this->hasMany(TagerPageField::class);
+        return $this->hasMany(TagerPageField::class, 'page_id');
     }
 }
