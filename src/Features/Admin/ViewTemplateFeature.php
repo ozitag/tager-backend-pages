@@ -25,6 +25,7 @@ class ViewTemplateFeature extends Feature
         }
 
         $result = [
+            'id' => $this->alias,
             'label' => $model['label'] ?? 'Template "' . $this->alias . '"',
             'fields' => []
         ];

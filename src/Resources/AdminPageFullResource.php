@@ -8,11 +8,22 @@ use OZiTAG\Tager\Backend\Mail\Models\TagerMailTemplate;
 use OZiTAG\Tager\Backend\Mail\Utils\TagerMailConfig;
 use OZiTAG\Tager\Backend\Pages\Enums\FieldType;
 use OZiTAG\Tager\Backend\Pages\Models\TagerPage;
+use OZiTAG\Tager\Backend\Pages\Models\TagerPageField;
 use OZiTAG\Tager\Backend\Pages\Repositories\PagesRepository;
+use OZiTAG\Tager\Backend\Pages\TagerPagesConfig;
 use OZiTAG\Tager\Backend\Seo\Models\SeoPage;
 
 class AdminPageFullResource extends JsonResource
 {
+    private function getValue(TagerPageField $templateField, $type)
+    {
+        if ($type == FieldType::File || $type == FieldType::Image) {
+            return $templateField->file ? $templateField->file->getShortJson() : null;
+        }
+
+        return $templateField->value;
+    }
+
     private function getTemplateValuesJson()
     {
         if (!$this->template) {
@@ -22,10 +33,15 @@ class AdminPageFullResource extends JsonResource
         $result = [];
 
         foreach ($this->templateFields as $templateField) {
+            $field = TagerPagesConfig::getField($this->template, $templateField->field);
+            if (!$field) {
+                continue;
+            }
+
             $result[] = [
                 'field' => $templateField->field,
-                'valuePlain' => $templateField->value,
-                'valueFile' => $templateField->file ? $templateField->file->getShortJson() : null
+                'type' => $field['type'],
+                'value' => $this->getValue($templateField, $field['type'])
             ];
         }
 
