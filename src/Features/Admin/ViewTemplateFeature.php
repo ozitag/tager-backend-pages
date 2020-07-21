@@ -17,6 +17,31 @@ class ViewTemplateFeature extends Feature
         $this->alias = $alias;
     }
 
+    private function getMetaJson($fieldModel)
+    {
+        $result = [];
+
+        if (isset($fieldModel['params'])) {
+            foreach ($fieldModel['params'] as $key => $value) {
+
+                $valueProcessed = $value;
+                if ($key == 'options') {
+                    $valueProcessed = [];
+                    foreach ($value as $valueKey => $valueItem) {
+                        $valueProcessed[] = [
+                            'value' => $valueKey,
+                            'label' => $valueItem
+                        ];
+                    }
+                }
+
+                $result[$key] = $valueProcessed;
+            }
+        }
+
+        return $result;
+    }
+
     public function handle()
     {
         $model = $this->run(GetTemplateByAliasJob::class, ['alias' => $this->alias]);
@@ -34,7 +59,8 @@ class ViewTemplateFeature extends Feature
             $result['fields'][] = [
                 'field' => $fieldId,
                 'type' => $fieldModel['type'],
-                'label' => $fieldModel['label']
+                'label' => $fieldModel['label'],
+                'meta' => $this->getMetaJson($fieldModel)
             ];
         }
 
