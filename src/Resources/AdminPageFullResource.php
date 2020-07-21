@@ -60,7 +60,7 @@ class AdminPageFullResource extends JsonResource
             'id' => $this->id,
             'template' => $this->template,
             'title' => $this->title,
-            'urlPath' => $this->url_path,
+            'path' => $this->url_path,
             'parent' => $parentJson,
             'image' => $this->image ? $this->image->getShortJson() : null,
             'excerpt' => $this->excerpt,
