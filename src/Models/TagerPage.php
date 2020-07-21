@@ -4,10 +4,13 @@ namespace OZiTAG\Tager\Backend\Pages\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Kalnoy\Nestedset\NodeTrait;
 use Ozerich\FileStorage\Models\File;
 
 class TagerPage extends Model
 {
+    use NodeTrait;
+
     use SoftDeletes;
 
     protected $table = 'tager_pages';
