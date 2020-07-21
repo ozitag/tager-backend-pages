@@ -14,6 +14,11 @@ class TagerPagesNested extends Migration
     public function up()
     {
         Schema::table('tager_pages', function (Blueprint $table) {
+            $table->dropForeign('tager_pages_parent_id_foreign');
+            $table->dropColumn('parent_id');
+        });
+
+        Schema::table('tager_pages', function (Blueprint $table) {
             $table->nestedSet();
         });
     }
@@ -27,6 +32,11 @@ class TagerPagesNested extends Migration
     {
         Schema::table('tager_pages', function (Blueprint $table) {
             $table->dropNestedSet();
+        });
+
+        Schema::table('tager_pages', function (Blueprint $table) {
+            $table->unsignedBigInteger('parent_id')->nullable();
+            $table->foreign('parent_id')->references('id')->on('tager_pages');
         });
     }
 }
