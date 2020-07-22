@@ -20,7 +20,7 @@ class CreatePageFeature extends Feature
 {
     public function handle(CreatePageRequest $request)
     {
-        $urlPath = $request->urlPath ? $request->urlPath : $this->run(GetPageUrlPathJob::class, [
+        $urlPath = $request->path ? $request->path : $this->run(GetPageUrlPathJob::class, [
             'title' => $request->title,
             'parentId' => $request->parent
         ]);

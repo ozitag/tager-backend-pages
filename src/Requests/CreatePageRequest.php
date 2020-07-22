@@ -14,7 +14,7 @@ class CreatePageRequest extends FormRequest
         return [
             'template' => ['nullable', 'string', new TemplateRule()],
             'title' => 'required|string',
-            'urlPath' => ['nullable', 'string', 'unique:tager_pages,url_path,0,id,deleted_at,NULL'],
+            'path' => ['nullable', 'string', 'unique:tager_pages,url_path,0,id,deleted_at,NULL'],
             'parent' => ['nullable', 'integer', 'exists:tager_pages,id'],
             'image' => ['nullable', 'numeric', new FileRule()],
             'excerpt' => 'nullable|string',

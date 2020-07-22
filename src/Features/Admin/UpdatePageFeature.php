@@ -29,7 +29,7 @@ class UpdatePageFeature extends Feature
 
         $page = $this->run(UpdatePageJob::class, [
             'model' => $model,
-            'urlPath' => $request->urlPath,
+            'urlPath' => $request->path,
             'parentId' => $request->parent,
             'title' => $request->title
         ]);

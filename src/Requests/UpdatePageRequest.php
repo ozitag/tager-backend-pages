@@ -11,7 +11,7 @@ class UpdatePageRequest extends CreatePageRequest
     public function rules()
     {
         return array_merge(parent::rules(), [
-            'urlPath' => ['required', 'string', 'unique:tager_pages,url_path,' . $this->route('id', 0) . ',id,deleted_at,NULL'],
+            'path' => ['required', 'string', 'unique:tager_pages,url_path,' . $this->route('id', 0) . ',id,deleted_at,NULL'],
         ]);
     }
 }
