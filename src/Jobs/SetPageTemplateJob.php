@@ -42,7 +42,7 @@ class SetPageTemplateJob
         $repository->removeByPageId($this->model->id);
 
         foreach ($this->fields as $fieldItem) {
-            $configField = TagerPagesConfig::getField($this->template, $fieldItem['field']);
+            $configField = TagerPagesConfig::getField($this->template, $fieldItem['name']);
             if (!$configField) {
                 continue;
             }
@@ -68,7 +68,7 @@ class SetPageTemplateJob
 
             $repository->create([
                 'page_id' => $this->model->id,
-                'field' => $fieldItem['field'],
+                'field' => $fieldItem['name'],
                 'value' => $value,
                 'file_id' => $fileId
             ]);
