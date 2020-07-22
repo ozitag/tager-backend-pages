@@ -61,7 +61,7 @@ class ViewTemplateFeature extends Feature
 
         foreach ($model['fields'] as $fieldId => $fieldModel) {
             $result['fields'][] = [
-                'field' => $fieldId,
+                'name' => $fieldId,
                 'type' => $fieldModel['type'],
                 'label' => $fieldModel['label'],
                 'meta' => $this->getMetaJson($fieldModel)
