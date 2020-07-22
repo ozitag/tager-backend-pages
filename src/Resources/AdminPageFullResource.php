@@ -27,7 +27,7 @@ class AdminPageFullResource extends JsonResource
     private function getTemplateValuesJson()
     {
         if (!$this->template) {
-            return null;
+            return [];
         }
 
         $result = [];
