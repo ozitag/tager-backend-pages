@@ -39,6 +39,10 @@ class ViewTemplateFeature extends Feature
             }
         }
 
+        if (empty($result)) {
+            return new \stdClass;
+        }
+
         return $result;
     }
 
