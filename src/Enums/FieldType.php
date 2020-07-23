@@ -2,7 +2,7 @@
 
 namespace OZiTAG\Tager\Backend\Pages\Enums;
 
-use OZiTAG\Tager\Backend\Core\Enum;
+use OZiTAG\Tager\Backend\Core\Enums\Enum;
 
 class FieldType extends Enum
 {

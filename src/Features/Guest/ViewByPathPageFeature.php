@@ -2,7 +2,7 @@
 
 namespace OZiTAG\Tager\Backend\Pages\Features\Guest;
 
-use OZiTAG\Tager\Backend\Core\Feature;
+use OZiTAG\Tager\Backend\Core\Features\Feature;
 use OZiTAG\Tager\Backend\Pages\Jobs\GetPageByUrlPathJob;
 use OZiTAG\Tager\Backend\Pages\Resources\PageFullResource;
 

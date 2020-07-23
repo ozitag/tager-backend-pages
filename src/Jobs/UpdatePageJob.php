@@ -2,12 +2,12 @@
 
 namespace OZiTAG\Tager\Backend\Pages\Jobs;
 
-use Illuminate\Queue\Jobs\Job;
+use OZiTAG\Tager\Backend\Core\Jobs\Job;
 use OZiTAG\Tager\Backend\Pages\Exceptions\InvalidUrlPathException;
 use OZiTAG\Tager\Backend\Pages\Models\TagerPage;
 use OZiTAG\Tager\Backend\Pages\Repositories\PagesRepository;
 
-class UpdatePageJob
+class UpdatePageJob extends Job
 {
     private $urlPath;
 

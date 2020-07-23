@@ -3,8 +3,6 @@
 namespace OZiTAG\Tager\Backend\Pages\Rules;
 
 use Illuminate\Contracts\Validation\Rule;
-use Ozerich\FileStorage\Models\File;
-use Ozerich\FileStorage\Repositories\FileRepository;
 use OZiTAG\Tager\Backend\Pages\TagerPagesConfig;
 
 class TemplateRule implements Rule

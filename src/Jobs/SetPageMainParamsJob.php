@@ -2,15 +2,13 @@
 
 namespace OZiTAG\Tager\Backend\Pages\Jobs;
 
-use Illuminate\Queue\Jobs\Job;
 use Ozerich\FileStorage\Repositories\FileRepository;
 use Ozerich\FileStorage\Storage;
-use OZiTAG\Tager\Backend\Pages\Exceptions\InvalidUrlPathException;
+use OZiTAG\Tager\Backend\Core\Jobs\Job;
 use OZiTAG\Tager\Backend\Pages\Models\TagerPage;
-use OZiTAG\Tager\Backend\Pages\Repositories\PagesRepository;
 use OZiTAG\Tager\Backend\Pages\TagerPagesConfig;
 
-class SetPageMainParamsJob
+class SetPageMainParamsJob extends Job
 {
     /** @var TagerPage */
     private $model;

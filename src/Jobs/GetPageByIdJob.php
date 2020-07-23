@@ -2,10 +2,10 @@
 
 namespace OZiTAG\Tager\Backend\Pages\Jobs;
 
-use Illuminate\Queue\Jobs\Job;
+use OZiTAG\Tager\Backend\Core\Jobs\Job;
 use OZiTAG\Tager\Backend\Pages\Repositories\PagesRepository;
 
-class GetPageByIdJob
+class GetPageByIdJob extends Job
 {
     private $id;
 

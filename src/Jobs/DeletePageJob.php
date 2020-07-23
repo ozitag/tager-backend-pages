@@ -2,11 +2,10 @@
 
 namespace OZiTAG\Tager\Backend\Pages\Jobs;
 
-use Illuminate\Queue\Jobs\Job;
+use OZiTAG\Tager\Backend\Core\Jobs\Job;
 use OZiTAG\Tager\Backend\Pages\Models\TagerPage;
-use OZiTAG\Tager\Backend\Pages\Repositories\PagesRepository;
 
-class DeletePageJob
+class DeletePageJob extends Job
 {
     private $model;
 

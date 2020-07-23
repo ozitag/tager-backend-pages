@@ -2,8 +2,6 @@
 
 namespace OZiTAG\Tager\Backend\Pages;
 
-use OZiTAG\Tager\Backend\Pages\Enums\FieldType;
-
 class TagerPagesConfig
 {
     private static function config($param = null, $default = null)

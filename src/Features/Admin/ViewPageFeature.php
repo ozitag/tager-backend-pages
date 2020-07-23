@@ -2,8 +2,7 @@
 
 namespace OZiTAG\Tager\Backend\Pages\Features\Admin;
 
-use OZiTAG\Tager\Backend\Core\Feature;
-use OZiTAG\Tager\Backend\Core\SuccessResource;
+use OZiTAG\Tager\Backend\Core\Features\Feature;
 use OZiTAG\Tager\Backend\Pages\Jobs\GetPageByIdJob;
 use OZiTAG\Tager\Backend\Pages\Resources\AdminPageFullResource;
 

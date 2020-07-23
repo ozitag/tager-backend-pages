@@ -3,7 +3,7 @@
 namespace OZiTAG\Tager\Backend\Pages\Controllers;
 
 use Illuminate\Http\Request;
-use OZiTAG\Tager\Backend\Core\Controller;
+use OZiTAG\Tager\Backend\Core\Controllers\Controller;
 use OZiTAG\Tager\Backend\Pages\Features\Guest\ListPagesFeature;
 use OZiTAG\Tager\Backend\Pages\Features\Guest\ViewByIdPageFeature;
 use OZiTAG\Tager\Backend\Pages\Features\Guest\ViewByPathPageFeature;

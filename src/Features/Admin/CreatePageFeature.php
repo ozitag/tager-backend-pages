@@ -2,18 +2,13 @@
 
 namespace OZiTAG\Tager\Backend\Pages\Features\Admin;
 
-use Ozerich\FileStorage\Rules\FileRule;
-use OZiTAG\Tager\Backend\Core\Feature;
-use OZiTAG\Tager\Backend\Core\SuccessResource;
-use OZiTAG\Tager\Backend\Pages\Exceptions\InvalidUrlPathException;
+use OZiTAG\Tager\Backend\Core\Features\Feature;
 use OZiTAG\Tager\Backend\Pages\Jobs\CreatePageJob;
 use OZiTAG\Tager\Backend\Pages\Jobs\GetPageUrlPathJob;
-use OZiTAG\Tager\Backend\Pages\Jobs\SetPageMainParams;
 use OZiTAG\Tager\Backend\Pages\Jobs\SetPageMainParamsJob;
 use OZiTAG\Tager\Backend\Pages\Jobs\SetPageSeoParamsJob;
 use OZiTAG\Tager\Backend\Pages\Jobs\SetPageTemplateJob;
 use OZiTAG\Tager\Backend\Pages\Requests\CreatePageRequest;
-use OZiTAG\Tager\Backend\Pages\Requests\PageRequest;
 use OZiTAG\Tager\Backend\Pages\Resources\AdminPageFullResource;
 
 class CreatePageFeature extends Feature

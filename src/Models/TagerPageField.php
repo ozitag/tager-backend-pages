@@ -3,9 +3,7 @@
 namespace OZiTAG\Tager\Backend\Pages\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Ozerich\FileStorage\Models\File;
-use OZiTAG\Tager\Backend\Mail\Models\TagerMailTemplate;
 
 class TagerPageField extends Model
 {

@@ -2,11 +2,10 @@
 
 namespace OZiTAG\Tager\Backend\Pages\Jobs;
 
-use Illuminate\Queue\Jobs\Job;
-use OZiTAG\Tager\Backend\Pages\Repositories\PagesRepository;
+use OZiTAG\Tager\Backend\Core\Jobs\Job;
 use OZiTAG\Tager\Backend\Pages\TagerPagesConfig;
 
-class GetTemplateByAliasJob
+class GetTemplateByAliasJob extends Job
 {
     private $alias;
 

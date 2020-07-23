@@ -1,18 +1,20 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use OZiTAG\Tager\Backend\Pages\Controllers\PublicController;
+use OZiTAG\Tager\Backend\Pages\Controllers\AdminController;
 
-Route::get('/tager/pages', \OZiTAG\Tager\Backend\Pages\Controllers\PublicController::class . '@index');
-Route::get('/tager/pages/{id}', \OZiTAG\Tager\Backend\Pages\Controllers\PublicController::class . '@viewById');
-Route::get('/tager/pages/view', \OZiTAG\Tager\Backend\Pages\Controllers\PublicController::class . '@viewByPath');
+Route::get('/tager/pages', [PublicController::class, 'index']);
+Route::get('/tager/pages/{id}', [PublicController::class, 'viewById']);
+Route::get('/tager/pages/view', [PublicController::class, 'viewByPath']);
 
 Route::group(['prefix' => 'admin/pages', 'middleware' => ['passport:administrators', 'auth:api']], function () {
-    Route::get('/templates', \OZiTAG\Tager\Backend\Pages\Controllers\AdminController::class . '@templates');
-    Route::get('/templates/{alias}', \OZiTAG\Tager\Backend\Pages\Controllers\AdminController::class . '@viewTemplate');
+    Route::get('/templates', [AdminController::class, 'templates']);
+    Route::get('/templates/{alias}', [AdminController::class, 'viewTemplate']);
 
-    Route::get('/', \OZiTAG\Tager\Backend\Pages\Controllers\AdminController::class . '@index');
-    Route::post('/', \OZiTAG\Tager\Backend\Pages\Controllers\AdminController::class . '@create');
-    Route::put('/{id}', \OZiTAG\Tager\Backend\Pages\Controllers\AdminController::class . '@update');
-    Route::get('/{id}', \OZiTAG\Tager\Backend\Pages\Controllers\AdminController::class . '@view');
-    Route::delete('/{id}', \OZiTAG\Tager\Backend\Pages\Controllers\AdminController::class . '@delete');
+    Route::get('/', [AdminController::class, 'index']);
+    Route::post('/', [AdminController::class, 'create']);
+    Route::put('/{id}', [AdminController::class, 'update']);
+    Route::get('/{id}', [AdminController::class, 'view']);
+    Route::delete('/{id}', [AdminController::class, 'delete']);
 });

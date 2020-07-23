@@ -2,7 +2,7 @@
 
 namespace OZiTAG\Tager\Backend\Pages\Features\Guest;
 
-use OZiTAG\Tager\Backend\Core\Feature;
+use OZiTAG\Tager\Backend\Core\Features\Feature;
 use OZiTAG\Tager\Backend\Pages\Repositories\PagesRepository;
 use OZiTAG\Tager\Backend\Pages\Resources\PageResource;
 

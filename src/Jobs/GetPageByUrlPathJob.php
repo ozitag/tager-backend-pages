@@ -2,9 +2,10 @@
 
 namespace OZiTAG\Tager\Backend\Pages\Jobs;
 
+use OZiTAG\Tager\Backend\Core\Jobs\Job;
 use OZiTAG\Tager\Backend\Pages\Repositories\PagesRepository;
 
-class GetPageByUrlPathJob
+class GetPageByUrlPathJob extends Job
 {
     private $path;
 

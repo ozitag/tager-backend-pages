@@ -2,10 +2,6 @@
 
 namespace OZiTAG\Tager\Backend\Pages\Requests;
 
-use Ozerich\FileStorage\Rules\FileRule;
-use OZiTAG\Tager\Backend\Blog\Models\BlogCategory;
-use OZiTAG\Tager\Backend\Core\FormRequest;
-
 class UpdatePageRequest extends CreatePageRequest
 {
     public function rules()
