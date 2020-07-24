@@ -14,13 +14,12 @@ class PageFullResource extends JsonResource
         }
 
         $result = [];
-
         foreach ($this->templateFields as $templateField) {
-            $result[] = [
-                'field' => $templateField->field,
-                'valuePlain' => $templateField->value,
-                'valueFile' => $templateField->file ? $templateField->file->getShortJson() : null
-            ];
+            $result[$templateField->field] = $templateField->file ? $templateField->file->getShortJson() : $templateField->value;
+        }
+
+        if (empty($result)) {
+            return new \stdClass;
         }
 
         return $result;
@@ -38,7 +37,6 @@ class PageFullResource extends JsonResource
 
         return [
             'id' => $this->id,
-            'template' => $this->template,
             'title' => $this->title,
             'path' => $this->url_path,
             'parent' => $parentJson,
@@ -46,7 +44,8 @@ class PageFullResource extends JsonResource
             'excerpt' => $this->excerpt,
             'body' => $this->body,
             'seoParams' => $seoParams,
-            'templateValues' => $this->getTemplateValuesJson()
+            'template' => $this->template,
+            'templateFields' => $this->getTemplateValuesJson()
         ];
     }
 }
