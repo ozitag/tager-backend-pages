@@ -5,7 +5,7 @@ namespace OZiTAG\Tager\Backend\Pages\Resources;
 use Illuminate\Http\Resources\Json\JsonResource;
 use OZiTAG\Tager\Backend\Pages\Models\TagerPageField;
 use OZiTAG\Tager\Backend\Pages\TagerPagesConfig;
-use OZiTAG\Tager\Backend\Utils\Enums\FieldType;
+use OZiTAG\Tager\Backend\Fields\Enums\FieldType;
 
 class AdminPageFullResource extends JsonResource
 {

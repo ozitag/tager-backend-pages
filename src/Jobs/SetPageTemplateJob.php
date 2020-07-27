@@ -5,7 +5,7 @@ namespace OZiTAG\Tager\Backend\Pages\Jobs;
 use Ozerich\FileStorage\Repositories\IFileRepository;
 use Ozerich\FileStorage\Storage;
 use OZiTAG\Tager\Backend\Core\Jobs\Job;
-use OZiTAG\Tager\Backend\Utils\Enums\FieldType;
+use OZiTAG\Tager\Backend\Fields\Enums\FieldType;
 use OZiTAG\Tager\Backend\Pages\Models\TagerPage;
 use OZiTAG\Tager\Backend\Pages\Repositories\PageFieldsRepository;
 use OZiTAG\Tager\Backend\Pages\TagerPagesConfig;
