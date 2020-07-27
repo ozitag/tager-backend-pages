@@ -33,7 +33,7 @@ class AdminPageFullResource extends JsonResource
             }
 
             $result[] = [
-                'field' => $templateField->field,
+                'name' => $templateField->field,
                 'type' => $field['type'],
                 'value' => $this->getValue($templateField, $field['type'])
             ];
