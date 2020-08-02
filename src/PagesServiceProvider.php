@@ -4,7 +4,7 @@ namespace OZiTAG\Tager\Backend\Pages;
 
 use Illuminate\Support\ServiceProvider;
 
-class TagerBackendPagesServiceProvider extends ServiceProvider
+class PagesServiceProvider extends ServiceProvider
 {
     /**
      * Register any application services.
