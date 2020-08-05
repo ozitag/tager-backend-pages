@@ -44,7 +44,14 @@ class PageFullResource extends JsonResource
             'path' => $this->parent->url_path
         ] : null;
 
-        $seoParams = new SeoParamsResource($this->page_title, $this->page_description, $this->openGraphImage, $this->open_graph_title, $this->open_graph_description);
+        $seoParams = new SeoParamsResource($this->page_title, $this->page_description);
+
+        $openGraphUrl = null;
+        if($this->openGraphImage){
+            $openGraphUrl = $this->openGraphImage->getDefaultThumbnailUrl(TagerPagesConfig::getOpenGraphScenario());
+        }
+
+        $seoParams->setOpenGraph($openGraphUrl, $this->open_graph_title, $this->open_graph_description);
 
         return [
             'id' => $this->id,
