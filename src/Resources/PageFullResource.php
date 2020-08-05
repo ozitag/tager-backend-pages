@@ -3,6 +3,7 @@
 namespace OZiTAG\Tager\Backend\Pages\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use OZiTAG\Tager\Backend\Pages\TagerPagesConfig;
 use OZiTAG\Tager\Backend\Seo\Resources\SeoParamsResource;
 
 class PageFullResource extends JsonResource
@@ -14,8 +15,18 @@ class PageFullResource extends JsonResource
         }
 
         $result = [];
-        foreach ($this->templateFields as $templateField) {
-            $result[$templateField->field] = $templateField->file ? $templateField->file->getFullJson() : $templateField->value;
+
+        $templateConfig = TagerPagesConfig::getTemplateConfig($this->template);
+        $templateFiedls = $templateConfig['fields'] ?? [];
+
+        foreach ($templateFiedls as $field => $templateField) {
+            $value = null;
+            foreach ($this->templateFields as $templateField) {
+                if ($templateField->field == $field) {
+                    $value = $templateField->file ? $templateField->file->getFullJson() : $templateField->value;;
+                }
+            }
+            $result[$field] = $value;
         }
 
         if (empty($result)) {
