@@ -15,7 +15,7 @@ class PageFullResource extends JsonResource
 
         $result = [];
         foreach ($this->templateFields as $templateField) {
-            $result[$templateField->field] = $templateField->file ? $templateField->file->getShortJson() : $templateField->value;
+            $result[$templateField->field] = $templateField->file ? $templateField->file->getFullJson() : $templateField->value;
         }
 
         if (empty($result)) {
@@ -40,7 +40,7 @@ class PageFullResource extends JsonResource
             'title' => $this->title,
             'path' => $this->url_path,
             'parent' => $parentJson,
-            'image' => $this->image ? $this->image->getShortJson() : null,
+            'image' => $this->image ? $this->image->getFullJson() : null,
             'excerpt' => $this->excerpt,
             'body' => $this->body,
             'seoParams' => $seoParams,
