@@ -15,6 +15,7 @@
     "ozitag/tager-backend-core": "^1.2",
     "ozitag/tager-backend-utils": "^1.0.2",
     "ozitag/tager-backend-fields": "^1.0.4",
+    "ozitag/tager-backend-crud": "^1.0",
     "ozerich/laravel-filestorage-db": "^0.3",
     "kalnoy/nestedset": "^5.0"
   },

@@ -34,7 +34,7 @@ class SetPageTemplateJob extends Job
     /** @var Storage */
     private $fileStorage;
 
-    public function __construct($model, $template, $fields)
+    public function __construct($model, $template, $fields = [])
     {
         $this->model = $model;
         $this->template = $template;

@@ -1,31 +1,39 @@
 <?php
 
-namespace OZiTAG\Tager\Backend\Pages\Features\Admin;
+namespace OZiTAG\Tager\Backend\Pages\Operations;
 
 use OZiTAG\Tager\Backend\Core\Features\Feature;
+use OZiTAG\Tager\Backend\Core\Jobs\Operation;
 use OZiTAG\Tager\Backend\Pages\Jobs\GetPageByIdJob;
 use OZiTAG\Tager\Backend\Pages\Jobs\SetPageMainParamsJob;
 use OZiTAG\Tager\Backend\Pages\Jobs\SetPageSeoParamsJob;
 use OZiTAG\Tager\Backend\Pages\Jobs\SetPageTemplateJob;
 use OZiTAG\Tager\Backend\Pages\Jobs\UpdatePageJob;
+use OZiTAG\Tager\Backend\Pages\Models\TagerPage;
 use OZiTAG\Tager\Backend\Pages\Requests\UpdatePageRequest;
 use OZiTAG\Tager\Backend\Pages\Resources\AdminPageFullResource;
 
-class UpdatePageFeature extends Feature
+class UpdatePageOperation extends Operation
 {
-    private $id;
+    /** @var TagerPage */
+    private $model;
 
-    public function __construct($id)
+    /** @var UpdatePageRequest */
+    private $request;
+
+    public function __construct(TagerPage $model, UpdatePageRequest $request)
     {
-        $this->id = $id;
+        $this->model = $model;
+
+        $this->request = $request;
     }
 
-    public function handle(UpdatePageRequest $request)
+    public function handle()
     {
-        $model = $this->run(GetPageByIdJob::class, ['id' => $this->id]);
+        $request = $this->request;
 
         $page = $this->run(UpdatePageJob::class, [
-            'model' => $model,
+            'model' => $this->model,
             'urlPath' => $request->path,
             'parentId' => $request->parent,
             'title' => $request->title
@@ -57,6 +65,6 @@ class UpdatePageFeature extends Feature
             'fields' => $request->templateFields
         ]);
 
-        return new AdminPageFullResource($page);
+        return $page;
     }
 }

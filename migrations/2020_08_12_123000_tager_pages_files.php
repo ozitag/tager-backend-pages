@@ -19,13 +19,17 @@ class TagerPagesFiles extends Migration
             $table->unsignedBigInteger('field_id');
             $table->unsignedBigInteger('file_id');
 
-            $table->foreign('field_id')->references('id')->on('tager_page_fields');
-            $table->foreign('file_id')->references('id')->on('files');
+            $table->foreign('field_id')->references('id')->on('tager_page_fields')->onDelete('CASCADE');
+            $table->foreign('file_id')->references('id')->on('files')->onDelete('CASCADE');
+
         });
 
         Schema::table('tager_page_fields', function (Blueprint $table) {
             $table->dropForeign('tager_page_fields_file_id_foreign');
             $table->dropColumn('file_id');
+
+            $table->dropForeign('tager_page_fields_parent_id_foreign');
+            $table->foreign('parent_id')->references('id')->on('tager_page_fields')->onDelete('CASCADE');
         });
     }
 

@@ -3,22 +3,28 @@
 namespace OZiTAG\Tager\Backend\Pages\Repositories;
 
 use OZiTAG\Tager\Backend\Core\Repositories\EloquentRepository;
+use OZiTAG\Tager\Backend\Crud\Contracts\IRepositoryCrudTreeRepository;
 use OZiTAG\Tager\Backend\Pages\Models\TagerPage;
 
-class PagesRepository extends EloquentRepository
+class PagesRepository extends EloquentRepository implements IRepositoryCrudTreeRepository
 {
     public function __construct(TagerPage $model)
     {
         parent::__construct($model);
     }
 
+    public function toFlatTree()
+    {
+        return $this->model::query()->withDepth()->defaultOrder()->get()->toFlatTree();
+    }
+
     public function findByAlias($alias)
     {
-        return TagerPage::whereAlias($alias)->first();
+        return $this->model::query()->whereAlias($alias)->first();
     }
 
     public function findByUrlPath($urlPath)
     {
-        return TagerPage::whereUrlPath($urlPath)->first();
+        return $this->model::query()->whereUrlPath($urlPath)->first();
     }
 }

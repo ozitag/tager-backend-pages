@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Kalnoy\Nestedset\NodeTrait;
 use Ozerich\FileStorage\Models\File;
+use OZiTAG\Tager\Backend\Fields\Enums\FieldType;
+use OZiTAG\Tager\Backend\Pages\TagerPagesConfig;
 
 class TagerPage extends Model
 {
@@ -53,5 +55,82 @@ class TagerPage extends Model
     public function templateFields()
     {
         return $this->hasMany(TagerPageField::class, 'page_id');
+    }
+
+    private function getRepeaterValue($children, $fields)
+    {
+        $result = [];
+
+        foreach ($children as $child) {
+            $row = [];
+            foreach ($fields as $field => $fieldData) {
+                $type = $fieldData['type'];
+
+                $found = null;
+                foreach ($child->children as $item) {
+                    if ($item->field == $field) {
+                        $found = $item;
+                        break;
+                    }
+                }
+
+                if (!$found) {
+                    $row[$field] = null;
+                } else {
+                    $row[$field] = $this->getValue($found, $fieldData);
+                }
+            }
+
+            $result[] = $row;
+        }
+
+        return $result;
+    }
+
+    private function getValue(TagerPageField $templateField, $fieldConfig)
+    {
+        $type = $fieldConfig['type'];
+
+        if ($type == FieldType::Repeater) {
+            return $this->getRepeaterValue($templateField->children, $fieldConfig['fields']);
+        } else if ($type == FieldType::File) {
+            return $templateField->files ? $templateField->files[0]->getUrl() : null;
+        } else if ($type == FieldType::Image) {
+            return $templateField->files ? $templateField->files[0]->getFullJson() : null;
+        } else if ($type == FieldType::Gallery) {
+            $result = [];
+
+            foreach ($templateField->files as $file) {
+                $result[] = $file->getFullJson();
+            }
+
+            return $result;
+        } else {
+            return $templateField->value;
+        }
+    }
+
+    public function getTemplateValuesJsonAttribute()
+    {
+        if (!$this->template) {
+            return [];
+        }
+
+        $result = [];
+
+        foreach ($this->templateFields as $templateField) {
+            $field = TagerPagesConfig::getField($this->template, $templateField->field);
+            if (!$field) {
+                continue;
+            }
+
+            $result[] = [
+                'name' => $templateField->field,
+                'type' => $field['type'],
+                'value' => $this->getValue($templateField, $field)
+            ];
+        }
+
+        return $result;
     }
 }
