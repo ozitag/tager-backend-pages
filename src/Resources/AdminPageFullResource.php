@@ -9,13 +9,57 @@ use OZiTAG\Tager\Backend\Fields\Enums\FieldType;
 
 class AdminPageFullResource extends JsonResource
 {
-    private function getValue(TagerPageField $templateField, $type)
+    private function getRepeaterValue($children, $fields)
     {
-        if ($type == FieldType::File || $type == FieldType::Image) {
-            return $templateField->file ? $templateField->file->getShortJson() : null;
+        $result = [];
+
+        foreach ($children as $child) {
+            $row = [];
+            foreach ($fields as $field => $fieldData) {
+                $type = $fieldData['type'];
+
+                $found = null;
+                foreach ($child->children as $item) {
+                    if ($item->field == $field) {
+                        $found = $item;
+                        break;
+                    }
+                }
+
+                if (!$found) {
+                    $row[$field] = null;
+                } else {
+                    $row[$field] = $this->getValue($found, $fieldData);
+                }
+            }
+
+            $result[] = $row;
         }
 
-        return $templateField->value;
+        return $result;
+    }
+
+    private function getValue(TagerPageField $templateField, $fieldConfig)
+    {
+        $type = $fieldConfig['type'];
+
+        if ($type == FieldType::Repeater) {
+            return $this->getRepeaterValue($templateField->children, $fieldConfig['fields']);
+        } else if ($type == FieldType::File) {
+            return $templateField->files ? $templateField->files[0]->getUrl() : null;
+        } else if ($type == FieldType::Image) {
+            return $templateField->files ? $templateField->files[0]->getFullJson() : null;
+        } else if ($type == FieldType::Gallery) {
+            $result = [];
+
+            foreach ($templateField->files as $file) {
+                $result[] = $file->getFullJson();
+            }
+
+            return $result;
+        } else {
+            return $templateField->value;
+        }
     }
 
     private function getTemplateValuesJson()
@@ -35,7 +79,7 @@ class AdminPageFullResource extends JsonResource
             $result[] = [
                 'name' => $templateField->field,
                 'type' => $field['type'],
-                'value' => $this->getValue($templateField, $field['type'])
+                'value' => $this->getValue($templateField, $field)
             ];
         }
 

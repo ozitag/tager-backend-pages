@@ -2,6 +2,7 @@
 
 namespace OZiTAG\Tager\Backend\Pages\Models;
 
+use App\Models\Product;
 use Illuminate\Database\Eloquent\Model;
 use Ozerich\FileStorage\Models\File;
 
@@ -17,14 +18,33 @@ class TagerPageField extends Model
      * @var array
      */
     protected $fillable = [
+        'parent_id',
         'page_id',
         'field',
-        'value',
-        'file_id'
+        'value'
     ];
 
-    public function file()
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function files()
     {
-        return $this->belongsTo(File::class);
+        return $this->belongsToMany(
+            File::class,
+            'tager_page_field_files',
+            'field_id',
+            'file_id'
+        );
+    }
+
+    public function children()
+    {
+        return $this->hasMany(self::class, 'parent_id');
+    }
+
+    public function parent()
+    {
+        return $this->belongsTo(self::class);
     }
 }

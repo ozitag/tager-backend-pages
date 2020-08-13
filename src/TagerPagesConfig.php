@@ -42,6 +42,8 @@ class TagerPagesConfig
             return null;
         }
 
-        return $templateModel['fields'][$field];
+        $result = $templateModel['fields'][$field];
+        $result['field'] = $field;
+        return $result;
     }
 }
