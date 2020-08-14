@@ -3,11 +3,61 @@
 namespace OZiTAG\Tager\Backend\Pages\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use OZiTAG\Tager\Backend\Fields\Enums\FieldType;
+use OZiTAG\Tager\Backend\Fields\FieldFactory;
 use OZiTAG\Tager\Backend\Pages\TagerPagesConfig;
 use OZiTAG\Tager\Backend\Seo\Resources\SeoParamsResource;
 
 class PageFullResource extends JsonResource
 {
+    private function getValuesByFields($modelFields, $templateFields)
+    {
+        $result = [];
+
+        foreach ($templateFields as $field => $templateField) {
+            $type = $templateField['type'];
+
+            $found = null;
+            foreach ($modelFields as $modelField) {
+                if ($modelField->field == $field) {
+                    $found = $modelField;
+                    break;
+                }
+            }
+
+            if (!$found) {
+                $result[$field] = null;
+                continue;
+            }
+
+            if ($type == FieldType::Repeater) {
+                $repeaterValue = [];
+
+                foreach($found->children as $child){
+                    $repeaterValue[] = $this->getValuesByFields($child->children, $templateField['fields']);
+                }
+
+                $result[$field] = $repeaterValue;
+            } else {
+
+                if ($type == FieldType::File || $type == FieldType::Image) {
+                    $value = $found->files ? $found->files[0] : null;
+                } else if ($type == FieldType::Gallery) {
+                    $value = $found->files;
+                } else {
+                    $value = $found->value;
+                }
+
+                $fieldModel = FieldFactory::create($type);
+                $fieldModel->setValue($value);
+
+                $result[$field] = $fieldModel->getPublicValue();
+            }
+        }
+
+        return $result;
+    }
+
     private function getTemplateValuesJson()
     {
         if (!$this->template) {
@@ -17,9 +67,11 @@ class PageFullResource extends JsonResource
         $result = [];
 
         $templateConfig = TagerPagesConfig::getTemplateConfig($this->template);
-        $templateFiedls = $templateConfig['fields'] ?? [];
+        $templateFields = $templateConfig['fields'] ?? [];
 
-        foreach ($templateFiedls as $field => $templateField) {
+        return $this->getValuesByFields($this->templateFields, $templateFields);
+
+        foreach ($templateFields as $field => $templateField) {
             $value = null;
             foreach ($this->templateFields as $templateField) {
                 if ($templateField->field == $field) {
@@ -47,7 +99,7 @@ class PageFullResource extends JsonResource
         $seoParams = new SeoParamsResource($this->page_title, $this->page_description);
 
         $openGraphUrl = null;
-        if($this->openGraphImage){
+        if ($this->openGraphImage) {
             $openGraphUrl = $this->openGraphImage->getDefaultThumbnailUrl(TagerPagesConfig::getOpenGraphScenario());
         }
 

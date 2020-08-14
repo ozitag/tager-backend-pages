@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Kalnoy\Nestedset\NodeTrait;
 use Ozerich\FileStorage\Models\File;
 use OZiTAG\Tager\Backend\Fields\Enums\FieldType;
+use OZiTAG\Tager\Backend\Fields\FieldFactory;
 use OZiTAG\Tager\Backend\Pages\TagerPagesConfig;
 
 class TagerPage extends Model
@@ -56,85 +57,73 @@ class TagerPage extends Model
     {
         return $this->hasMany(TagerPageField::class, 'page_id');
     }
-
-    private function getRepeaterValue($children, $fields)
+    
+    private function getValuesByFields($modelFields, $templateFields)
     {
         $result = [];
 
-        foreach ($children as $child) {
-            $row = [];
-            foreach ($fields as $field => $fieldData) {
-                $type = $fieldData['type'];
+        foreach ($templateFields as $field => $templateField) {
+            $type = $templateField['type'];
 
-                $found = null;
-                foreach ($child->children as $item) {
-                    if ($item->field == $field) {
-                        $found = $item;
-                        break;
-                    }
+            $found = null;
+            foreach ($modelFields as $modelField) {
+                if ($modelField->field == $field) {
+                    $found = $modelField;
+                    break;
                 }
+            }
 
-                $fieldModel = [
-                    'name' => $field,
+            if (!$found) {
+                $result[] = [
+                    'field' => $field,
                     'value' => null
                 ];
 
-                if ($found) {
-                    $fieldModel['value'] = $this->getValue($found, $fieldData);
-                }
-
-                $row[] = $fieldModel;
+                continue;
             }
 
-            $result[] = $row;
+            if ($type == FieldType::Repeater) {
+                $repeaterValue = [];
+
+                foreach ($found->children as $child) {
+                    $repeaterValue[] = $this->getValuesByFields($child->children, $templateField['fields']);
+                }
+
+                $result[] = ['field' => $field, 'value' => $repeaterValue];
+            } else {
+
+                if ($type == FieldType::File || $type == FieldType::Image) {
+                    $value = $found->files ? $found->files[0] : null;
+                } else if ($type == FieldType::Gallery) {
+                    $value = $found->files;
+                } else {
+                    $value = $found->value;
+                }
+
+                $fieldModel = FieldFactory::create($type);
+                $fieldModel->setValue($value);
+
+                $result[] = [
+                    'field' => $field,
+                    'value' => $fieldModel->getAdminFullJson()
+                ];
+            }
         }
 
         return $result;
-    }
-
-    private function getValue(TagerPageField $templateField, $fieldConfig)
-    {
-        $type = $fieldConfig['type'];
-
-        if ($type == FieldType::Repeater) {
-            return $this->getRepeaterValue($templateField->children, $fieldConfig['fields']);
-        } else if ($type == FieldType::File) {
-            return $templateField->files ? $templateField->files[0]->getUrl() : null;
-        } else if ($type == FieldType::Image) {
-            return $templateField->files ? $templateField->files[0]->getShortJson() : null;
-        } else if ($type == FieldType::Gallery) {
-            $result = [];
-
-            foreach ($templateField->files as $file) {
-                $result[] = $file->getShortJson();
-            }
-
-            return $result;
-        } else {
-            return $templateField->value;
-        }
     }
 
     public function getTemplateValuesJsonAttribute()
     {
         if (!$this->template) {
-            return [];
+            return null;
         }
 
         $result = [];
 
-        foreach ($this->templateFields as $templateField) {
-            $field = TagerPagesConfig::getField($this->template, $templateField->field);
-            if (!$field) {
-                continue;
-            }
+        $templateConfig = TagerPagesConfig::getTemplateConfig($this->template);
+        $templateFields = $templateConfig['fields'] ?? [];
 
-            $result[] = [
-                'name' => $templateField->field,
-                'value' => $this->getValue($templateField, $field)
-            ];
-        }
-
-        return $result;
+        return $this->getValuesByFields($this->templateFields, $templateFields);
     }
 }
