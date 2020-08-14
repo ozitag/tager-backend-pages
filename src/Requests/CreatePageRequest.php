@@ -13,7 +13,7 @@ class CreatePageRequest extends CrudFormRequest
         return [
             'title' => 'required|string',
             'template' => ['nullable', 'string', new TemplateRule()],
-            'parent' => ['nullable', 'integer', 'exists:tager_pages,id']
+            'parent' => ['nullable', 'integer', 'exists:tager_pages,id,id,!0,deleted_at,NULL']
         ];
     }
 }

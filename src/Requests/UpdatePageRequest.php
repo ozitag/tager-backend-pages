@@ -13,7 +13,10 @@ class UpdatePageRequest extends CreatePageRequest
             'template' => ['nullable', 'string', new TemplateRule()],
             'title' => 'required|string',
             'path' => ['required', 'string', 'unique:tager_pages,url_path,' . $this->route('id', 0) . ',id,deleted_at,NULL'],
-            'parent' => ['nullable', 'integer', 'exists:tager_pages,id'],
+            'parent' => [
+                'nullable', 'integer', 'exists:tager_pages,id,id,!0,deleted_at,NULL',
+                'not_in:' . $this->route('id')
+            ],
             'image' => ['nullable', 'numeric', new FileRule()],
             'excerpt' => 'nullable|string',
             'body' => 'nullable|string',
