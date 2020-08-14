@@ -31,7 +31,13 @@ class AdminPagesController extends AdminCrudController
             'id',
             'depth',
             'title',
-            'path' => 'url_path'
+            'path' => 'url_path',
+            'parent' => [
+                'relation' => 'parent',
+                'as' => [
+                    'id', 'title'
+                ]
+            ],
         ]);
 
         $this->setFullResourceFields([
