@@ -74,11 +74,16 @@ class TagerPage extends Model
                     }
                 }
 
-                if (!$found) {
-                    $row[$field] = null;
-                } else {
-                    $row[$field] = $this->getValue($found, $fieldData);
+                $fieldModel = [
+                    'name' => $field,
+                    'value' => null
+                ];
+
+                if ($found) {
+                    $fieldModel['value'] = $this->getValue($found, $fieldData);
                 }
+
+                $row[] = $fieldModel;
             }
 
             $result[] = $row;
@@ -96,12 +101,12 @@ class TagerPage extends Model
         } else if ($type == FieldType::File) {
             return $templateField->files ? $templateField->files[0]->getUrl() : null;
         } else if ($type == FieldType::Image) {
-            return $templateField->files ? $templateField->files[0]->getFullJson() : null;
+            return $templateField->files ? $templateField->files[0]->getShortJson() : null;
         } else if ($type == FieldType::Gallery) {
             $result = [];
 
             foreach ($templateField->files as $file) {
-                $result[] = $file->getFullJson();
+                $result[] = $file->getShortJson();
             }
 
             return $result;
@@ -126,7 +131,6 @@ class TagerPage extends Model
 
             $result[] = [
                 'name' => $templateField->field,
-                'type' => $field['type'],
                 'value' => $this->getValue($templateField, $field)
             ];
         }
