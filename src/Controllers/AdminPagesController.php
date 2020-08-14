@@ -27,7 +27,7 @@ class AdminPagesController extends AdminCrudController
 
         $this->setDeleteAction(CheckIfCanDeletePageJob::class);
 
-        $this->setResourceFields([
+        $fields = [
             'id',
             'depth',
             'title',
@@ -38,19 +38,12 @@ class AdminPagesController extends AdminCrudController
                     'id', 'title'
                 ]
             ],
-        ]);
+        ];
 
-        $this->setFullResourceFields([
-            'id',
-            'path' => 'url_path',
-            'title',
+        $this->setResourceFields($fields);
+
+        $this->setFullResourceFields(array_merge($fields, [
             'template',
-            'parent' => [
-                'relation' => 'parent',
-                'as' => [
-                    'id', 'title'
-                ]
-            ],
             'image:file:json',
             'excerpt',
             'body',
@@ -60,7 +53,7 @@ class AdminPagesController extends AdminCrudController
             'openGraphDescription' => 'open_graph_description',
             'openGraphImage:file:json',
             'templateValues' => 'templateValuesJson'
-        ]);
+        ]));
 
         $this->setCacheNamespace('tager/pages');
     }
