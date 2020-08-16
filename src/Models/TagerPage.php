@@ -57,7 +57,7 @@ class TagerPage extends Model
     {
         return $this->hasMany(TagerPageField::class, 'page_id');
     }
-    
+
     private function getValuesByFields($modelFields, $templateFields)
     {
         $result = [];
@@ -76,7 +76,7 @@ class TagerPage extends Model
             if (!$found) {
                 $result[] = [
                     'field' => $field,
-                    'value' => null
+                    'value' => $type == FieldType::Repeater ? [] : null
                 ];
 
                 continue;
@@ -118,8 +118,6 @@ class TagerPage extends Model
         if (!$this->template) {
             return null;
         }
-
-        $result = [];
 
         $templateConfig = TagerPagesConfig::getTemplateConfig($this->template);
         $templateFields = $templateConfig['fields'] ?? [];
