@@ -7,6 +7,7 @@ use Ozerich\FileStorage\Repositories\IFileRepository;
 use Ozerich\FileStorage\Storage;
 use OZiTAG\Tager\Backend\Core\Jobs\Job;
 use OZiTAG\Tager\Backend\Fields\Enums\FieldType;
+use OZiTAG\Tager\Backend\Fields\TypeFactory;
 use OZiTAG\Tager\Backend\Pages\Models\TagerPage;
 use OZiTAG\Tager\Backend\Pages\Models\TagerPageField;
 use OZiTAG\Tager\Backend\Pages\Repositories\PageFieldFilesRepository;
@@ -28,9 +29,6 @@ class SetPageTemplateJob extends Job
     /** @var PageFieldFilesRepository */
     private $pageFieldFilesRepository;
 
-    /** @var FileRepository */
-    private $fileRepository;
-
     /** @var Storage */
     private $fileStorage;
 
@@ -48,6 +46,8 @@ class SetPageTemplateJob extends Job
     private function saveRepeaterFields(TagerPageField $baseField, $childrenFields, $fields)
     {
         foreach ($childrenFields as $ind => $childrenField) {
+
+            /** @var TagerPageField $childrenFieldModel */
             $childrenFieldModel = $this->pageFieldsRepository->create([
                 'page_id' => $this->model->id,
                 'field' => $baseField->field . '[' . $ind . ']',
@@ -60,7 +60,7 @@ class SetPageTemplateJob extends Job
                 $fieldConfig = $fields[$fieldModel['name']];
                 $fieldConfig['field'] = $fieldModel['name'];
 
-                $value = $this->saveValue($fieldModel['value'] ?? null, $fieldConfig, $childrenFieldModel);
+                $this->saveValue($fieldModel['value'] ?? null, $fieldConfig, $childrenFieldModel);
             }
         }
     }
@@ -69,20 +69,21 @@ class SetPageTemplateJob extends Job
     {
         $type = $fieldConfig['type'];
 
-        $files = [];
+        $databaseValue = null;
 
-        $databaseValue = $value;
+        if ($type != FieldType::Repeater) {
+            $typeModel = TypeFactory::create($fieldConfig['type']);
+            $typeModel->setValue($value);
 
-        if ($type == FieldType::File || $type == FieldType::Image) {
-            $files[] = $fileModel->id;
-            $databaseValue = null;
-        } else if ($type == FieldType::Gallery) {
-            $files = is_array($value) ? $value : [$value];
-            $databaseValue = null;
-        } else if ($type == FieldType::Repeater) {
-            $databaseValue = null;
+            $scenario = $fieldConfig['params']['scenario'] ?? null;
+            if ($scenario) {
+                $typeModel->applyFileScenario($scenario);
+            }
+
+            $databaseValue = $typeModel->getDatabaseValue();
         }
 
+        /** @var TagerPageField $item */
         $item = $this->pageFieldsRepository->create([
             'page_id' => $this->model->id,
             'field' => $fieldConfig['field'],
@@ -90,38 +91,22 @@ class SetPageTemplateJob extends Job
             'parent_id' => $parent ? $parent->id : null
         ]);
 
-        $fieldId = $item->id;
-
-        if (!empty($files)) {
-            foreach ($files as $fileId) {
-                $fileModel = $this->fileRepository->find($fileId);
-
-                if (!$fileModel) {
-                    continue;
-                }
-
-                $scenario = $fieldConfig['params']['scenario'] ?? null;
-                if ($scenario) {
-                    $storage->setFileScenario($value, $scenario);
-                }
-
+        if ($type != FieldType::Repeater) {
+            foreach ($typeModel->getFileIds() as $fileId) {
                 $this->pageFieldFilesRepository->create([
-                    'field_id' => $fieldId,
-                    'file_id' => $fileModel->id
+                    'field_id' => $item->id,
+                    'file_id' => $fileId
                 ]);
             }
-        }
-
-        if ($type == FieldType::Repeater) {
+        } else {
             $this->saveRepeaterFields($item, $value, $fieldConfig['fields']);
         }
     }
 
-    public function handle(PageFieldsRepository $repository, PageFieldFilesRepository $pageFieldFilesRepository, IFileRepository $fileRepository, Storage $storage)
+    public function handle(PageFieldsRepository $repository, PageFieldFilesRepository $pageFieldFilesRepository, Storage $storage)
     {
         $this->pageFieldsRepository = $repository;
         $this->pageFieldFilesRepository = $pageFieldFilesRepository;
-        $this->fileRepository = $fileRepository;
         $this->fileStorage = $storage;
 
         $template = TagerPagesConfig::getTemplateConfig($this->template);
