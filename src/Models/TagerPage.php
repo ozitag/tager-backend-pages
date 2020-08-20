@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Kalnoy\Nestedset\NodeTrait;
 use Ozerich\FileStorage\Models\File;
 use OZiTAG\Tager\Backend\Fields\Enums\FieldType;
-use OZiTAG\Tager\Backend\Fields\FieldFactory;
+use OZiTAG\Tager\Backend\Fields\TypeFactory;
 use OZiTAG\Tager\Backend\Pages\TagerPagesConfig;
 
 class TagerPage extends Model
@@ -100,12 +100,12 @@ class TagerPage extends Model
                     $value = $found->value;
                 }
 
-                $fieldModel = FieldFactory::create($type);
-                $fieldModel->setValue($value);
+                $type = TypeFactory::create($type);
+                $type->setValue($value);
 
                 $result[] = [
                     'field' => $field,
-                    'value' => $fieldModel->getAdminFullJson()
+                    'value' => $type->getAdminFullJson()
                 ];
             }
         }

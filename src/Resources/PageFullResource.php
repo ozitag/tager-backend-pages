@@ -4,7 +4,7 @@ namespace OZiTAG\Tager\Backend\Pages\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 use OZiTAG\Tager\Backend\Fields\Enums\FieldType;
-use OZiTAG\Tager\Backend\Fields\FieldFactory;
+use OZiTAG\Tager\Backend\Fields\TypeFactory;
 use OZiTAG\Tager\Backend\Pages\TagerPagesConfig;
 use OZiTAG\Tager\Backend\Seo\Resources\SeoParamsResource;
 
@@ -33,7 +33,7 @@ class PageFullResource extends JsonResource
             if ($type == FieldType::Repeater) {
                 $repeaterValue = [];
 
-                foreach($found->children as $child){
+                foreach ($found->children as $child) {
                     $repeaterValue[] = $this->getValuesByFields($child->children, $templateField['fields']);
                 }
 
@@ -48,10 +48,10 @@ class PageFullResource extends JsonResource
                     $value = $found->value;
                 }
 
-                $fieldModel = FieldFactory::create($type);
-                $fieldModel->setValue($value);
+                $type = TypeFactory::create($type);
+                $type->setValue($value);
 
-                $result[$field] = $fieldModel->getPublicValue();
+                $result[$field] = $type->getPublicValue();
             }
         }
 
@@ -64,28 +64,10 @@ class PageFullResource extends JsonResource
             return null;
         }
 
-        $result = [];
-
         $templateConfig = TagerPagesConfig::getTemplateConfig($this->template);
         $templateFields = $templateConfig['fields'] ?? [];
 
         return $this->getValuesByFields($this->templateFields, $templateFields);
-
-        foreach ($templateFields as $field => $templateField) {
-            $value = null;
-            foreach ($this->templateFields as $templateField) {
-                if ($templateField->field == $field) {
-                    $value = $templateField->file ? $templateField->file->getFullJson() : $templateField->value;;
-                }
-            }
-            $result[$field] = $value;
-        }
-
-        if (empty($result)) {
-            return new \stdClass;
-        }
-
-        return $result;
     }
 
     public function toArray($request)
