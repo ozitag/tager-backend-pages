@@ -13,6 +13,7 @@ Route::group(['prefix' => 'admin/pages', 'middleware' => ['passport:administrato
     Route::get('/templates', [AdminTemplatesController::class, 'index']);
     Route::get('/templates/{alias}', [AdminTemplatesController::class, 'view']);
 
+    Route::get('/count', [AdminPagesController::class, '/count']);
     Route::get('/', [AdminPagesController::class, 'index']);
     Route::post('/', [AdminPagesController::class, 'store']);
     Route::put('/{id}', [AdminPagesController::class, 'update']);
