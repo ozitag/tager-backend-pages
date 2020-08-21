@@ -6,13 +6,16 @@ use Ozerich\FileStorage\Repositories\FileRepository;
 use Ozerich\FileStorage\Repositories\IFileRepository;
 use Ozerich\FileStorage\Storage;
 use OZiTAG\Tager\Backend\Core\Jobs\Job;
+use OZiTAG\Tager\Backend\Fields\Base\Field;
 use OZiTAG\Tager\Backend\Fields\Enums\FieldType;
+use OZiTAG\Tager\Backend\Fields\Fields\RepeaterField;
 use OZiTAG\Tager\Backend\Fields\TypeFactory;
 use OZiTAG\Tager\Backend\Pages\Models\TagerPage;
 use OZiTAG\Tager\Backend\Pages\Models\TagerPageField;
 use OZiTAG\Tager\Backend\Pages\Repositories\PageFieldFilesRepository;
 use OZiTAG\Tager\Backend\Pages\Repositories\PageFieldsRepository;
-use OZiTAG\Tager\Backend\Pages\TagerPagesConfig;
+use OZiTAG\Tager\Backend\Pages\Utils\TagerPagesConfig;
+use OZiTAG\Tager\Backend\Pages\Utils\TagerPagesTemplates;
 
 class SetPageTemplateJob extends Job
 {
@@ -39,13 +42,15 @@ class SetPageTemplateJob extends Job
         $this->fields = $fields;
     }
 
+
     /**
-     * @param TagerPageField $field
-     * @param array $childrenFields
+     * @param TagerPageField $baseField
+     * @param Field[] $fields
+     * @param array $fieldValues
      */
-    private function saveRepeaterFields(TagerPageField $baseField, $childrenFields, $fields)
+    private function saveRepeaterFields(TagerPageField $baseField, $fields, $values)
     {
-        foreach ($childrenFields as $ind => $childrenField) {
+        foreach ($values as $ind => $value) {
 
             /** @var TagerPageField $childrenFieldModel */
             $childrenFieldModel = $this->pageFieldsRepository->create([
@@ -55,51 +60,51 @@ class SetPageTemplateJob extends Job
                 'parent_id' => $baseField->id
             ]);
 
-            foreach ($childrenField as $field => $fieldModel) {
+            foreach ($value as $fieldValue) {
+                $param = $fieldValue['name'] ?? null;
+                if (!$param) {
+                    continue;
+                }
 
-                $fieldConfig = $fields[$fieldModel['name']];
-                $fieldConfig['field'] = $fieldModel['name'];
+                $field = $fields[$param] ?? null;
+                if (!$field) {
+                    continue;
+                }
 
-                $this->saveValue($fieldModel['value'] ?? null, $fieldConfig, $childrenFieldModel);
+                $this->saveValue($param, $fieldValue['value'] ?? null, $field, $childrenFieldModel);
             }
         }
     }
 
-    private function saveValue($value, $fieldConfig, ?TagerPageField $parent)
+    private function saveValue($param, $value, Field $field, ?TagerPageField $parent = null)
     {
-        $type = $fieldConfig['type'];
+        $type = $field->getTypeInstance();
+        $type->setValue($value);
 
-        $databaseValue = null;
-
-        if ($type != FieldType::Repeater) {
-            $typeModel = TypeFactory::create($fieldConfig['type']);
-            $typeModel->setValue($value);
-
-            $scenario = $fieldConfig['params']['scenario'] ?? null;
+        if ($type->hasFiles()) {
+            $scenario = $field->getMetaParamValue('scenario');
             if ($scenario) {
-                $typeModel->applyFileScenario($scenario);
+                $type->applyFileScenario($scenario);
             }
-
-            $databaseValue = $typeModel->getDatabaseValue();
         }
 
         /** @var TagerPageField $item */
         $item = $this->pageFieldsRepository->create([
             'page_id' => $this->model->id,
-            'field' => $fieldConfig['field'],
-            'value' => $databaseValue,
+            'field' => $param,
+            'value' => $type->hasFiles() ? null : $type->getDatabaseValue(),
             'parent_id' => $parent ? $parent->id : null
         ]);
 
-        if ($type != FieldType::Repeater) {
-            foreach ($typeModel->getFileIds() as $fileId) {
+        if ($field instanceof RepeaterField) {
+            $this->saveRepeaterFields($item, $field->getFields(), $value);
+        } else {
+            foreach ($type->getFileIds() as $fileId) {
                 $this->pageFieldFilesRepository->create([
                     'field_id' => $item->id,
                     'file_id' => $fileId
                 ]);
             }
-        } else {
-            $this->saveRepeaterFields($item, $value, $fieldConfig['fields']);
         }
     }
 
@@ -109,7 +114,7 @@ class SetPageTemplateJob extends Job
         $this->pageFieldFilesRepository = $pageFieldFilesRepository;
         $this->fileStorage = $storage;
 
-        $template = TagerPagesConfig::getTemplateConfig($this->template);
+        $template = TagerPagesTemplates::get($this->template);
         if (!$template) {
             return $this->model;
         }
@@ -120,12 +125,13 @@ class SetPageTemplateJob extends Job
         $this->pageFieldsRepository->removeByPageId($this->model->id);
 
         foreach ($this->fields as $fieldItem) {
-            $configField = TagerPagesConfig::getField($this->template, $fieldItem['name']);
-            if (!$configField || !isset($configField['type'])) {
+
+            $field = $template->getField($fieldItem['name']);
+            if (!$field) {
                 continue;
             }
 
-            $this->saveValue($fieldItem['value'] ?? null, $configField, null);
+            $this->saveValue($fieldItem['name'], $fieldItem['value'] ?? null, $field);
         }
 
         return $this->model;

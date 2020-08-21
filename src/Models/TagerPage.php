@@ -6,9 +6,12 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Kalnoy\Nestedset\NodeTrait;
 use Ozerich\FileStorage\Models\File;
+use OZiTAG\Tager\Backend\Fields\Base\Field;
 use OZiTAG\Tager\Backend\Fields\Enums\FieldType;
+use OZiTAG\Tager\Backend\Fields\Fields\RepeaterField;
 use OZiTAG\Tager\Backend\Fields\TypeFactory;
-use OZiTAG\Tager\Backend\Pages\TagerPagesConfig;
+use OZiTAG\Tager\Backend\Pages\Utils\TagerPagesConfig;
+use OZiTAG\Tager\Backend\Pages\Utils\TagerPagesTemplates;
 
 class TagerPage extends Model
 {
@@ -58,12 +61,18 @@ class TagerPage extends Model
         return $this->hasMany(TagerPageField::class, 'page_id');
     }
 
+    /**
+     * @param array $modelFields
+     * @param Field[] $templateFields
+     * @return array
+     * @throws \OZiTAG\Tager\Backend\Fields\Exceptions\InvalidTypeException
+     */
     private function getValuesByFields($modelFields, $templateFields)
     {
         $result = [];
 
         foreach ($templateFields as $field => $templateField) {
-            $type = $templateField['type'];
+            $type = $templateField->getType();
 
             $found = null;
             foreach ($modelFields as $modelField) {
@@ -73,36 +82,30 @@ class TagerPage extends Model
                 }
             }
 
+            $isRepeater = $templateField instanceof RepeaterField;
+
             if (!$found) {
                 $result[] = [
                     'field' => $field,
-                    'value' => $type == FieldType::Repeater ? [] : null
+                    'value' => $isRepeater ? [] : null
                 ];
 
                 continue;
             }
 
-            if ($type == FieldType::Repeater) {
+            if ($isRepeater) {
                 $repeaterValue = [];
 
                 foreach ($found->children as $child) {
-                    $repeaterValue[] = $this->getValuesByFields($child->children, $templateField['fields']);
+                    $repeaterValue[] = $this->getValuesByFields($child->children, $templateField->getFields());
                 }
 
                 $result[] = ['field' => $field, 'value' => $repeaterValue];
             } else {
 
-                if ($type == FieldType::File || $type == FieldType::Image) {
-                    $value = $found->files ? $found->files[0] : null;
-                } else if ($type == FieldType::Gallery) {
-                    $value = $found->files;
-                } else {
-                    $value = $found->value;
-                }
-
                 $type = TypeFactory::create($type);
-                $type->setValue($value);
-
+                $type->setValue($type->isFileType() ? $found->files : $found->value);
+                
                 $result[] = [
                     'field' => $field,
                     'value' => $type->getAdminFullJson()
@@ -119,9 +122,13 @@ class TagerPage extends Model
             return null;
         }
 
-        $templateConfig = TagerPagesConfig::getTemplateConfig($this->template);
-        $templateFields = $templateConfig['fields'] ?? [];
+        $tagerTemplates = new TagerPagesTemplates;
 
-        return $this->getValuesByFields($this->templateFields, $templateFields);
+        $template = $tagerTemplates->get($this->template);
+        if (!$template) {
+            return null;
+        }
+
+        return $this->getValuesByFields($this->templateFields, $template->getFields());
     }
 }

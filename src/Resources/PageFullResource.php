@@ -3,19 +3,28 @@
 namespace OZiTAG\Tager\Backend\Pages\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use OZiTAG\Tager\Backend\Fields\Base\Field;
 use OZiTAG\Tager\Backend\Fields\Enums\FieldType;
+use OZiTAG\Tager\Backend\Fields\Fields\RepeaterField;
 use OZiTAG\Tager\Backend\Fields\TypeFactory;
-use OZiTAG\Tager\Backend\Pages\TagerPagesConfig;
+use OZiTAG\Tager\Backend\Pages\Models\TagerPageField;
+use OZiTAG\Tager\Backend\Pages\Utils\TagerPagesConfig;
+use OZiTAG\Tager\Backend\Pages\Utils\TagerPagesTemplates;
 use OZiTAG\Tager\Backend\Seo\Resources\SeoParamsResource;
 
 class PageFullResource extends JsonResource
 {
+    /**
+     * @param TagerPageField[] $modelFields
+     * @param Field[] $templateFields
+     * @return array
+     */
     private function getValuesByFields($modelFields, $templateFields)
     {
         $result = [];
 
         foreach ($templateFields as $field => $templateField) {
-            $type = $templateField['type'];
+            $type = $templateField->getType();
 
             $found = null;
             foreach ($modelFields as $modelField) {
@@ -30,26 +39,18 @@ class PageFullResource extends JsonResource
                 continue;
             }
 
-            if ($type == FieldType::Repeater) {
+            if ($templateField instanceof RepeaterField) {
                 $repeaterValue = [];
 
                 foreach ($found->children as $child) {
-                    $repeaterValue[] = $this->getValuesByFields($child->children, $templateField['fields']);
+                    $repeaterValue[] = $this->getValuesByFields($child->children, $templateField->getFields());
                 }
 
                 $result[$field] = $repeaterValue;
             } else {
 
-                if ($type == FieldType::File || $type == FieldType::Image) {
-                    $value = $found->files ? $found->files[0] : null;
-                } else if ($type == FieldType::Gallery) {
-                    $value = $found->files;
-                } else {
-                    $value = $found->value;
-                }
-
                 $type = TypeFactory::create($type);
-                $type->setValue($value);
+                $type->setValue($type->isFileType() ? $found->files : $found->value);
 
                 $result[$field] = $type->getPublicValue();
             }
@@ -64,10 +65,12 @@ class PageFullResource extends JsonResource
             return null;
         }
 
-        $templateConfig = TagerPagesConfig::getTemplateConfig($this->template);
-        $templateFields = $templateConfig['fields'] ?? [];
+        $template = TagerPagesTemplates::get($this->template);
+        if (!$template) {
+            return null;
+        }
 
-        return $this->getValuesByFields($this->templateFields, $templateFields);
+        return $this->getValuesByFields($this->templateFields, $template->getFields());
     }
 
     public function toArray($request)

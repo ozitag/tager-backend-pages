@@ -6,7 +6,7 @@ use Ozerich\FileStorage\Repositories\FileRepository;
 use Ozerich\FileStorage\Storage;
 use OZiTAG\Tager\Backend\Core\Jobs\Job;
 use OZiTAG\Tager\Backend\Pages\Models\TagerPage;
-use OZiTAG\Tager\Backend\Pages\TagerPagesConfig;
+use OZiTAG\Tager\Backend\Pages\Utils\TagerPagesConfig;
 
 class SetPageMainParamsJob extends Job
 {

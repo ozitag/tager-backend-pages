@@ -3,7 +3,8 @@
 namespace OZiTAG\Tager\Backend\Pages\Rules;
 
 use Illuminate\Contracts\Validation\Rule;
-use OZiTAG\Tager\Backend\Pages\TagerPagesConfig;
+use OZiTAG\Tager\Backend\Pages\Utils\TagerPagesConfig;
+use OZiTAG\Tager\Backend\Pages\Utils\TagerPagesTemplates;
 
 class TemplateRule implements Rule
 {
@@ -16,7 +17,9 @@ class TemplateRule implements Rule
      */
     public function passes($attribute, $value)
     {
-        $template = TagerPagesConfig::getTemplateConfig($value);
+        $tagerTemplates = new TagerPagesTemplates();
+        $template = $tagerTemplates->get($value);
+        
         if (!$template) {
             return false;
         }

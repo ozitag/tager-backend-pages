@@ -1,6 +1,6 @@
 <?php
 
-namespace OZiTAG\Tager\Backend\Pages;
+namespace OZiTAG\Tager\Backend\Pages\Utils;
 
 class TagerPagesConfig
 {
@@ -32,23 +32,5 @@ class TagerPagesConfig
     public static function getTemplatesConfig()
     {
         return self::config('templates', []);
-    }
-
-    public static function getTemplateConfig($template)
-    {
-        $items = self::config('templates', []);
-        return isset($items[$template]) ? $items[$template] : null;
-    }
-
-    public static function getField($template, $field)
-    {
-        $templateModel = self::getTemplateConfig($template);
-        if (!$templateModel || !isset($templateModel['fields'][$field])) {
-            return null;
-        }
-
-        $result = $templateModel['fields'][$field];
-        $result['field'] = $field;
-        return $result;
     }
 }
