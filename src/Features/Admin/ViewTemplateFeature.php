@@ -27,7 +27,7 @@ class ViewTemplateFeature extends Feature
         if (isset($fieldModel['params'])) {
             foreach ($fieldModel['params'] as $key => $value) {
 
-                if($key == 'scenario'){
+                if ($key == 'scenario') {
                     continue;
                 }
 
@@ -97,20 +97,22 @@ class ViewTemplateFeature extends Feature
             'fields' => []
         ];
 
-        foreach ($model['fields'] as $fieldId => $fieldModel) {
+        if (isset($model['fields']) && !empty($model['fields']) && is_array($model['fields'])) {
+            foreach ($model['fields'] as $fieldId => $fieldModel) {
 
-            $field = [
-                'name' => $fieldId,
-                'type' => $fieldModel['type'],
-                'label' => $fieldModel['label'],
-                'meta' => $this->getMetaJson($fieldModel),
-            ];
+                $field = [
+                    'name' => $fieldId,
+                    'type' => $fieldModel['type'],
+                    'label' => $fieldModel['label'],
+                    'meta' => $this->getMetaJson($fieldModel),
+                ];
 
-            if ($fieldModel['type'] == FieldType::Repeater) {
-                $field['fields'] = $this->getRepeaterFields($fieldModel);
+                if ($fieldModel['type'] == FieldType::Repeater) {
+                    $field['fields'] = $this->getRepeaterFields($fieldModel);
+                }
+
+                $result['fields'][] = $field;
             }
-
-            $result['fields'][] = $field;
         }
 
         return new JsonResource($result);
