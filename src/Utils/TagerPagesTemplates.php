@@ -24,6 +24,12 @@ class TagerPagesTemplates
                 }
 
                 $model = new Template($template['label'], $template['fields'] ?? []);
+            } else if (is_string($template)) {
+                $model = new $template;
+            }
+
+            if(!$model instanceof Template){
+                continue;
             }
 
             $model->setId($id);
