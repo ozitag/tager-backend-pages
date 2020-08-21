@@ -14,14 +14,19 @@ class TagerPagesConfig
         return self::config('file_storage_scenarios.' . $id);
     }
 
+    public static function getContentImageScenario()
+    {
+        return self::getStorageScenario('content');
+    }
+
     public static function getPageImageScenario()
     {
-        return self::getStorageScenario('page_image');
+        return self::getStorageScenario('cover');
     }
 
     public static function getOpenGraphScenario()
     {
-        return self::getStorageScenario('open_graph');
+        return self::getStorageScenario('openGraph');
     }
 
     public static function getTemplatesConfig()
