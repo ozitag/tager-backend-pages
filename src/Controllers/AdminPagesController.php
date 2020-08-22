@@ -35,7 +35,7 @@ class AdminPagesController extends AdminCrudController
             'id',
             'depth',
             'title',
-            'template' => 'templateName',
+            'templateName',
             'path' => 'url_path',
             'parent' => [
                 'relation' => 'parent',
@@ -48,6 +48,7 @@ class AdminPagesController extends AdminCrudController
         $this->setResourceFields($fields);
 
         $this->setFullResourceFields(array_merge($fields, [
+            'template',
             'image:file:json',
             'excerpt',
             'body',
