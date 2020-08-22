@@ -7,10 +7,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Kalnoy\Nestedset\NodeTrait;
 use Ozerich\FileStorage\Models\File;
 use OZiTAG\Tager\Backend\Fields\Base\Field;
-use OZiTAG\Tager\Backend\Fields\Enums\FieldType;
 use OZiTAG\Tager\Backend\Fields\Fields\RepeaterField;
 use OZiTAG\Tager\Backend\Fields\TypeFactory;
-use OZiTAG\Tager\Backend\Pages\Utils\TagerPagesConfig;
 use OZiTAG\Tager\Backend\Pages\Utils\TagerPagesTemplates;
 
 class TagerPage extends Model
@@ -86,7 +84,7 @@ class TagerPage extends Model
 
             if (!$found) {
                 $result[] = [
-                    'field' => $field,
+                    'name' => $field,
                     'value' => $isRepeater ? [] : null
                 ];
 
@@ -100,14 +98,14 @@ class TagerPage extends Model
                     $repeaterValue[] = $this->getValuesByFields($child->children, $templateField->getFields());
                 }
 
-                $result[] = ['field' => $field, 'value' => $repeaterValue];
+                $result[] = ['name' => $field, 'value' => $repeaterValue];
             } else {
 
                 $type = TypeFactory::create($type);
                 $type->setValue($type->isFileType() ? $found->files : $found->value);
                 
                 $result[] = [
-                    'field' => $field,
+                    'name' => $field,
                     'value' => $type->getAdminFullJson()
                 ];
             }
