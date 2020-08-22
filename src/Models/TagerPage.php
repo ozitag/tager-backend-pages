@@ -9,6 +9,7 @@ use Ozerich\FileStorage\Models\File;
 use OZiTAG\Tager\Backend\Fields\Base\Field;
 use OZiTAG\Tager\Backend\Fields\Fields\RepeaterField;
 use OZiTAG\Tager\Backend\Fields\TypeFactory;
+use OZiTAG\Tager\Backend\Pages\Utils\TagerPagesConfig;
 use OZiTAG\Tager\Backend\Pages\Utils\TagerPagesTemplates;
 
 class TagerPage extends Model
@@ -103,7 +104,7 @@ class TagerPage extends Model
 
                 $type = TypeFactory::create($type);
                 $type->setValue($type->isFileType() ? $found->files : $found->value);
-                
+
                 $result[] = [
                     'name' => $field,
                     'value' => $type->getAdminFullJson()
@@ -128,5 +129,15 @@ class TagerPage extends Model
         }
 
         return $this->getValuesByFields($this->templateFields, $template->getFields());
+    }
+
+    public function getTemplateNameAttribute()
+    {
+        if (!$this->template) {
+            return '';
+        }
+
+        $template = TagerPagesTemplates::get($this->template);
+        return $template ? $template->getLabel() : $this->template . ' (Template not found)';
     }
 }

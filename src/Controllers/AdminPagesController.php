@@ -35,7 +35,7 @@ class AdminPagesController extends AdminCrudController
             'id',
             'depth',
             'title',
-            'template',
+            'template' => 'templateName',
             'path' => 'url_path',
             'parent' => [
                 'relation' => 'parent',
