@@ -22,4 +22,5 @@ Route::group(['prefix' => 'admin/pages', 'middleware' => ['passport:administrato
     Route::put('/{id}', [AdminPagesController::class, 'update']);
     Route::get('/{id}', [AdminPagesController::class, 'view']);
     Route::delete('/{id}', [AdminPagesController::class, 'delete']);
+    Route::post('/{id}/move/{direction}', [AdminPagesController::class, 'move'])->where('direction', 'up|down');
 });

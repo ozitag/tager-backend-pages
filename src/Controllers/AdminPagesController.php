@@ -16,7 +16,9 @@ use OZiTAG\Tager\Backend\Pages\Requests\UpdatePageRequest;
 class AdminPagesController extends AdminCrudController
 {
     public $hasCountAction = true;
-    
+
+    public $hasMoveAction = true;
+
     public function __construct(PagesRepository $repository)
     {
         parent::__construct($repository);
