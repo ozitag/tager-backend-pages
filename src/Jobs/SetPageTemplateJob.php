@@ -114,6 +114,15 @@ class SetPageTemplateJob extends Job
         $this->pageFieldFilesRepository = $pageFieldFilesRepository;
         $this->fileStorage = $storage;
 
+        if (!$this->template) {
+            $this->model->template = $this->template;
+            $this->model->save();
+
+            $this->pageFieldsRepository->removeByPageId($this->model->id);
+
+            return $this->model;
+        }
+
         $template = TagerPagesTemplates::get($this->template);
         if (!$template) {
             return $this->model;
