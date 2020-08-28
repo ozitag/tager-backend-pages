@@ -73,15 +73,12 @@ class PageFullResource extends JsonResource
         return $this->getValuesByFields($this->templateFields, $template->getFields());
     }
 
-    public function toArray($request)
+    private function getSeoParams()
     {
-        $parentJson = $this->parent ? [
-            'id' => $this->parent->id,
-            'title' => $this->parent->title,
-            'path' => $this->parent->url_path
-        ] : null;
-
-        $seoParams = new SeoParamsResource($this->page_title, $this->page_description);
+        $seoParams = new SeoParamsResource(
+            empty($this->page_title) == false ? $this->page_title : $this->title,
+            empty($this->page_description) == false ? $this->page_description : $this->excerpt
+        );
 
         $openGraphUrl = null;
         if ($this->openGraphImage) {
@@ -89,6 +86,17 @@ class PageFullResource extends JsonResource
         }
 
         $seoParams->setOpenGraph($openGraphUrl, $this->open_graph_title, $this->open_graph_description);
+
+        return $seoParams;
+    }
+
+    public function toArray($request)
+    {
+        $parentJson = $this->parent ? [
+            'id' => $this->parent->id,
+            'title' => $this->parent->title,
+            'path' => $this->parent->url_path
+        ] : null;
 
         return [
             'id' => $this->id,
@@ -98,7 +106,7 @@ class PageFullResource extends JsonResource
             'image' => $this->image ? $this->image->getFullJson() : null,
             'excerpt' => $this->excerpt,
             'body' => $this->body,
-            'seoParams' => $seoParams,
+            'seoParams' => $this->getSeoParams(),
             'template' => $this->template,
             'templateFields' => $this->getTemplateValuesJson()
         ];
