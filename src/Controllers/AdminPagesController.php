@@ -49,14 +49,14 @@ class AdminPagesController extends AdminCrudController
 
         $this->setFullResourceFields(array_merge($fields, [
             'template',
-            'image:file:json',
+            'image:file:model',
             'excerpt',
             'body',
             'pageTitle' => 'page_title',
             'pageDescription' => 'page_description',
             'openGraphTitle' => 'open_graph_title',
             'openGraphDescription' => 'open_graph_description',
-            'openGraphImage:file:json',
+            'openGraphImage:file:model',
             'templateValues' => 'templateValuesJson'
         ]));
 
