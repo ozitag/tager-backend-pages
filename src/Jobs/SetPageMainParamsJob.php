@@ -41,6 +41,8 @@ class SetPageMainParamsJob extends Job
                 }
                 $this->model->image_id = $this->imageId;
             }
+        } else {
+            $this->model->image_id = null;
         }
 
         $this->model->save();
