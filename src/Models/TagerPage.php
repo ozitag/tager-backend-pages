@@ -86,7 +86,7 @@ class TagerPage extends Model
             if (!$found) {
                 $result[] = [
                     'name' => $field,
-                    'value' => $isRepeater ? [] : null
+                    'value' => $type->isArray() ? [] : null
                 ];
 
                 continue;
