@@ -86,7 +86,7 @@ class TagerPage extends Model
             if (!$found) {
                 $result[] = [
                     'name' => $field,
-                    'value' => $type->isArray() ? [] : null
+                    'value' => $templateField->getTypeInstance()->isArray() ? [] : null
                 ];
 
                 continue;
