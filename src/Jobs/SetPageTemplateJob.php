@@ -92,7 +92,7 @@ class SetPageTemplateJob extends Job
         $item = $this->pageFieldsRepository->create([
             'page_id' => $this->model->id,
             'field' => $param,
-            'value' => $type->hasFiles() ? null : $type->getDatabaseValue(),
+            'value' => $type->getDatabaseValue(),
             'parent_id' => $parent ? $parent->id : null
         ]);
 

@@ -9,6 +9,7 @@ use Ozerich\FileStorage\Models\File;
 use OZiTAG\Tager\Backend\Fields\Base\Field;
 use OZiTAG\Tager\Backend\Fields\Fields\RepeaterField;
 use OZiTAG\Tager\Backend\Fields\TypeFactory;
+use OZiTAG\Tager\Backend\Fields\Types\GalleryType;
 use OZiTAG\Tager\Backend\Pages\Utils\TagerPagesConfig;
 use OZiTAG\Tager\Backend\Pages\Utils\TagerPagesTemplates;
 
@@ -71,7 +72,7 @@ class TagerPage extends Model
         $result = [];
 
         foreach ($templateFields as $field => $templateField) {
-            $type = $templateField->getType();
+            $type = $templateField->getTypeInstance();
 
             $found = null;
             foreach ($modelFields as $modelField) {
@@ -102,8 +103,25 @@ class TagerPage extends Model
                 $result[] = ['name' => $field, 'value' => $repeaterValue];
             } else {
 
-                $type = TypeFactory::create($type);
-                $type->setValue($type->isFileType() ? $found->files : $found->value);
+                if ($type instanceof GalleryType && $type->hasCaptions()) {
+                    $value = [];
+                    $jsonData = json_decode($found->value, true);
+                    foreach ($found->files as $file) {
+
+                        foreach ($jsonData as $jsonDatum) {
+                            if (isset($jsonDatum['id']) && $jsonDatum['id'] == $file->id) {
+                                $value[] = [
+                                    'id' => $file->id,
+                                    'caption' => $jsonDatum['caption'] ?? ''
+                                ];
+                                break;
+                            }
+                        }
+                    }
+                    $type->setValue($value);
+                } else {
+                    $type->setValue($type->isFileType() ? $found->files : $found->value);
+                }
 
                 $result[] = [
                     'name' => $field,

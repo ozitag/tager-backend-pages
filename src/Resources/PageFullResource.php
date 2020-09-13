@@ -4,8 +4,10 @@ namespace OZiTAG\Tager\Backend\Pages\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 use OZiTAG\Tager\Backend\Fields\Base\Field;
+use OZiTAG\Tager\Backend\Fields\Fields\GalleryField;
 use OZiTAG\Tager\Backend\Fields\Fields\RepeaterField;
 use OZiTAG\Tager\Backend\Fields\TypeFactory;
+use OZiTAG\Tager\Backend\Fields\Types\GalleryType;
 use OZiTAG\Tager\Backend\Pages\Models\TagerPageField;
 use OZiTAG\Tager\Backend\Pages\Utils\TagerPagesConfig;
 use OZiTAG\Tager\Backend\Pages\Utils\TagerPagesTemplates;
@@ -23,7 +25,6 @@ class PageFullResource extends JsonResource
         $result = [];
 
         foreach ($templateFields as $field => $templateField) {
-            $type = $templateField->getType();
 
             $found = null;
             foreach ($modelFields as $modelField) {
@@ -47,9 +48,27 @@ class PageFullResource extends JsonResource
 
                 $result[$field] = $repeaterValue;
             } else {
+                $type = $templateField->getTypeInstance();
 
-                $type = TypeFactory::create($type);
-                $type->setValue($type->isFileType() ? $found->files : $found->value);
+                if ($type instanceof GalleryType && $type->hasCaptions()) {
+                    $value = [];
+                    $jsonData = json_decode($found->value, true);
+                    foreach ($found->files as $file) {
+
+                        foreach ($jsonData as $jsonDatum) {
+                            if (isset($jsonDatum['id']) && $jsonDatum['id'] == $file->id) {
+                                $value[] = [
+                                    'id' => $file->id,
+                                    'caption' => $jsonDatum['caption'] ?? ''
+                                ];
+                                break;
+                            }
+                        }
+                    }
+                    $type->setValue($value);
+                } else{
+                    $type->setValue($type->isFileType() ? $found->files : $found->value);
+                }
 
                 $result[$field] = $type->getPublicValue();
             }
