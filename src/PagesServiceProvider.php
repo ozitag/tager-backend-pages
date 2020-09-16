@@ -3,6 +3,7 @@
 namespace OZiTAG\Tager\Backend\Pages;
 
 use Illuminate\Support\ServiceProvider;
+use OZiTAG\Tager\Backend\Panel\TagerPanel;
 
 class PagesServiceProvider extends ServiceProvider
 {
@@ -30,5 +31,7 @@ class PagesServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__ . '/../config.php' => config_path('tager-pages.php'),
         ]);
+
+        TagerPanel::registerRouteHandler('.*', PagesPanelRouteHandler::class);
     }
 }
