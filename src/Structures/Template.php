@@ -65,9 +65,7 @@ class Template
         ];
 
         foreach ($this->getFields() as $param => $field) {
-            $result['fields'][] = array_merge([
-                'name' => $param,
-            ], $field->getJson());
+            $result['fields'][] = $field->getJson();
         }
 
         return $result;
