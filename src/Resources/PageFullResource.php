@@ -66,8 +66,12 @@ class PageFullResource extends JsonResource
                         }
                     }
                     $type->setValue($value);
-                } else{
-                    $type->setValue($type->isFileType() ? $found->files : $found->value);
+                } else {
+                    if ($type->isFileType()) {
+                        $type->setValue($found->files);
+                    } else {
+                        $type->loadValueFromDatabase($found->value);
+                    }
                 }
 
                 $result[$field] = $type->getPublicValue();

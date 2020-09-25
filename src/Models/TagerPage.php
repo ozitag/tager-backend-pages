@@ -9,6 +9,7 @@ use Ozerich\FileStorage\Models\File;
 use OZiTAG\Tager\Backend\Fields\Base\Field;
 use OZiTAG\Tager\Backend\Fields\Fields\RepeaterField;
 use OZiTAG\Tager\Backend\Fields\TypeFactory;
+use OZiTAG\Tager\Backend\Fields\Types\ButtonType;
 use OZiTAG\Tager\Backend\Fields\Types\GalleryType;
 use OZiTAG\Tager\Backend\Pages\Utils\TagerPagesConfig;
 use OZiTAG\Tager\Backend\Pages\Utils\TagerPagesTemplates;
@@ -120,7 +121,11 @@ class TagerPage extends Model
                     }
                     $type->setValue($value);
                 } else {
-                    $type->setValue($type->isFileType() ? $found->files : $found->value);
+                    if ($type->isFileType()) {
+                        $type->setValue($found->files);
+                    } else {
+                        $type->loadValueFromDatabase($found->value);
+                    }
                 }
 
                 $result[] = [
