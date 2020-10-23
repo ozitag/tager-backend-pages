@@ -3,7 +3,9 @@
 namespace OZiTAG\Tager\Backend\Pages;
 
 use Illuminate\Support\ServiceProvider;
+use OZiTAG\Tager\Backend\Pages\Enums\PageScope;
 use OZiTAG\Tager\Backend\Panel\TagerPanel;
+use OZiTAG\Tager\Backend\Rbac\TagerScopes;
 
 class PagesServiceProvider extends ServiceProvider
 {
@@ -33,5 +35,12 @@ class PagesServiceProvider extends ServiceProvider
         ]);
 
         TagerPanel::registerRouteHandler('.*', PagesPanelRouteHandler::class);
+
+        TagerScopes::registerGroup('Pages', [
+            PageScope::View => 'View Pages',
+            PageScope::Create => 'Create Pages',
+            PageScope::Edit => 'Edit Pages',
+            PageScope::Delete => 'Delete Pages'
+        ]);
     }
 }
