@@ -3,6 +3,8 @@
 namespace OZiTAG\Tager\Backend\Pages\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\App;
+use Ozerich\FileStorage\Storage;
 use OZiTAG\Tager\Backend\Fields\Base\Field;
 use OZiTAG\Tager\Backend\Fields\Fields\GalleryField;
 use OZiTAG\Tager\Backend\Fields\Fields\RepeaterField;
@@ -15,6 +17,16 @@ use OZiTAG\Tager\Backend\Core\Resources\SeoParamsResource;
 
 class PageFullResource extends JsonResource
 {
+    /** @var Storage */
+    private $fileStorage;
+
+    public function __construct($resource)
+    {
+        $this->fileStorage = App::make(Storage::class);
+
+        parent::__construct($resource);
+    }
+
     /**
      * @param TagerPageField[] $modelFields
      * @param Field[] $templateFields
@@ -68,7 +80,14 @@ class PageFullResource extends JsonResource
                     $type->setValue($value);
                 } else {
                     if ($type->isFileType()) {
+                        $scenario = $templateField->getMetaParamValue('scenario');
                         $type->setValue($found->files);
+
+                        if ($scenario) {
+                            foreach ($found->files as $file) {
+                                $this->fileStorage->setFileScenario($file->id, $scenario);
+                            }
+                        }
                     } else {
                         $type->loadValueFromDatabase($found->value);
                     }
