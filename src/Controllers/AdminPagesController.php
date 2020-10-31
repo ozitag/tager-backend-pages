@@ -23,7 +23,7 @@ class AdminPagesController extends AdminCrudController
     {
         parent::__construct($repository);
 
-        $this->setIndexAction((new IndexAction())->enablePagination()->enableTree());
+        $this->setIndexAction((new IndexAction())->enablePagination()->enableTree()->enableSearchByQuery());
 
         $this->setStoreAction(new StoreOrUpdateAction(CreatePageRequest::class, CreatePageOperation::class));
 
