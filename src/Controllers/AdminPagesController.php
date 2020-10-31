@@ -2,11 +2,11 @@
 
 namespace OZiTAG\Tager\Backend\Pages\Controllers;
 
-use OZiTAG\Tager\Backend\Core\Controllers\Controller;
-use OZiTAG\Tager\Backend\Core\Repositories\EloquentRepository;
+use OZiTAG\Tager\Backend\Crud\Actions\DeleteAction;
+use OZiTAG\Tager\Backend\Crud\Actions\IndexAction;
+use OZiTAG\Tager\Backend\Crud\Actions\StoreOrUpdateAction;
 use OZiTAG\Tager\Backend\Crud\Controllers\AdminCrudController;
 use OZiTAG\Tager\Backend\Pages\Jobs\CheckIfCanDeletePageJob;
-use OZiTAG\Tager\Backend\Pages\Jobs\CreatePageJob;
 use OZiTAG\Tager\Backend\Pages\Operations\CreatePageOperation;
 use OZiTAG\Tager\Backend\Pages\Operations\UpdatePageOperation;
 use OZiTAG\Tager\Backend\Pages\Repositories\PagesRepository;
@@ -23,13 +23,13 @@ class AdminPagesController extends AdminCrudController
     {
         parent::__construct($repository);
 
-        $this->setIndexAction(true);
+        $this->setIndexAction((new IndexAction())->enablePagination()->enableTree());
 
-        $this->setStoreAction(CreatePageRequest::class, CreatePageOperation::class);
+        $this->setStoreAction(new StoreOrUpdateAction(CreatePageRequest::class, CreatePageOperation::class));
 
-        $this->setUpdateAction(UpdatePageRequest::class, UpdatePageOperation::class);
+        $this->setUpdateAction(new StoreOrUpdateAction(UpdatePageRequest::class, UpdatePageOperation::class));
 
-        $this->setDeleteAction(CheckIfCanDeletePageJob::class);
+        $this->setDeleteAction(new DeleteAction(CheckIfCanDeletePageJob::class));
 
         $fields = [
             'id',
