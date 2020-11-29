@@ -23,7 +23,7 @@ class PagesSitemapHandler implements ISitemapHandler
 
         $result = [];
         foreach ($pages as $page) {
-            $result[] = new SitemapItem('/' . $page->url_path, new Carbon($page->updated_at));
+            $result[] = new SitemapItem($page->url_path, new Carbon($page->updated_at));
         }
 
         return $result;
