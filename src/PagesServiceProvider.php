@@ -6,6 +6,7 @@ use Illuminate\Support\ServiceProvider;
 use OZiTAG\Tager\Backend\Pages\Enums\PageScope;
 use OZiTAG\Tager\Backend\Panel\TagerPanel;
 use OZiTAG\Tager\Backend\Rbac\TagerScopes;
+use OZiTAG\Tager\Backend\Sitemap\TagerSitemap;
 
 class PagesServiceProvider extends ServiceProvider
 {
@@ -35,6 +36,7 @@ class PagesServiceProvider extends ServiceProvider
         ]);
 
         TagerPanel::registerRouteHandler('.*', PagesPanelRouteHandler::class);
+        TagerSitemap::registerHandler(PagesSitemapHandler::class);
 
         TagerScopes::registerGroup('Pages', [
             PageScope::View => 'View Pages',
