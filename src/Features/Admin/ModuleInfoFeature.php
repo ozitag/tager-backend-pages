@@ -12,6 +12,11 @@ class ModuleInfoFeature extends Feature
     {
         return new JsonResource([
             'contentImageScenario' => TagerPagesConfig::getContentImageScenario(),
+            'fileScenarios' => [
+                'image' => TagerPagesConfig::getPageImageScenario(),
+                'content' => TagerPagesConfig::getContentImageScenario(),
+                'openGraph' => TagerPagesConfig::getOpenGraphScenario(),
+            ],
         ]);
     }
 }
