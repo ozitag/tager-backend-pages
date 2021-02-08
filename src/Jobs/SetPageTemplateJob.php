@@ -8,6 +8,7 @@ use Ozerich\FileStorage\Storage;
 use OZiTAG\Tager\Backend\Core\Jobs\Job;
 use OZiTAG\Tager\Backend\Fields\Base\Field;
 use OZiTAG\Tager\Backend\Fields\Enums\FieldType;
+use OZiTAG\Tager\Backend\Fields\Fields\GroupField;
 use OZiTAG\Tager\Backend\Fields\Fields\RepeaterField;
 use OZiTAG\Tager\Backend\Fields\TypeFactory;
 use OZiTAG\Tager\Backend\Pages\Models\TagerPage;
@@ -140,7 +141,18 @@ class SetPageTemplateJob extends Job
                 continue;
             }
 
-            $this->saveValue($fieldItem['name'], $fieldItem['value'] ?? null, $field);
+            if ($field instanceof GroupField) {
+                foreach ($fieldItem['value'] as $groupFieldItem) {
+                    $groupField = $template->getField($groupFieldItem['name']);
+                    if (!$groupField) {
+                        continue;
+                    }
+
+                    $this->saveValue($groupFieldItem['name'], $groupFieldItem['value'] ?? null, $groupField);
+                }
+            } else {
+                $this->saveValue($fieldItem['name'], $fieldItem['value'] ?? null, $field);
+            }
         }
 
         return $this->model;

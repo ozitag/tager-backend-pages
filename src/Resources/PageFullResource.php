@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\App;
 use Ozerich\FileStorage\Storage;
 use OZiTAG\Tager\Backend\Fields\Base\Field;
 use OZiTAG\Tager\Backend\Fields\Fields\GalleryField;
+use OZiTAG\Tager\Backend\Fields\Fields\GroupField;
 use OZiTAG\Tager\Backend\Fields\Fields\RepeaterField;
 use OZiTAG\Tager\Backend\Fields\TypeFactory;
 use OZiTAG\Tager\Backend\Fields\Types\GalleryType;
@@ -36,6 +37,11 @@ class PageFullResource extends JsonResource
     {
         $result = [];
 
+        $modelFieldsMap = [];
+        foreach ($modelFields as $modelField) {
+            $modelFieldsMap[$modelField->field_id] = $modelField;
+        }
+
         foreach ($templateFields as $field => $templateField) {
 
             $found = null;
@@ -46,7 +52,7 @@ class PageFullResource extends JsonResource
                 }
             }
 
-            if (!$found) {
+            if (!$found && $templateField instanceof GroupField == false) {
                 $result[$field] = null;
                 continue;
             }
@@ -59,6 +65,11 @@ class PageFullResource extends JsonResource
                 }
 
                 $result[$field] = $repeaterValue;
+            } else if ($templateField instanceof GroupField) {
+                $groupValue = $this->getValuesByFields($modelFields, $templateField->getFields());
+                if($groupValue) {
+                    $result = array_merge($result, $groupValue);
+                }
             } else {
                 $type = $templateField->getTypeInstance();
 

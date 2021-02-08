@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Kalnoy\Nestedset\NodeTrait;
 use Ozerich\FileStorage\Models\File;
 use OZiTAG\Tager\Backend\Fields\Base\Field;
+use OZiTAG\Tager\Backend\Fields\Fields\GroupField;
 use OZiTAG\Tager\Backend\Fields\Fields\RepeaterField;
 use OZiTAG\Tager\Backend\Fields\TypeFactory;
 use OZiTAG\Tager\Backend\Fields\Types\ButtonType;
@@ -72,6 +73,11 @@ class TagerPage extends Model
     {
         $result = [];
 
+        $modelFieldsMap = [];
+        foreach ($modelFields as $modelField) {
+            $modelFieldsMap[$modelField->field_id] = $modelField;
+        }
+
         foreach ($templateFields as $field => $templateField) {
             $type = $templateField->getTypeInstance();
 
@@ -84,8 +90,9 @@ class TagerPage extends Model
             }
 
             $isRepeater = $templateField instanceof RepeaterField;
+            $isGroup = $templateField instanceof GroupField;
 
-            if (!$found) {
+            if (!$found && !$isGroup) {
                 $result[] = [
                     'name' => $field,
                     'value' => $templateField->getTypeInstance()->isArray() ? [] : null
@@ -101,7 +108,15 @@ class TagerPage extends Model
                     $repeaterValue[] = $this->getValuesByFields($child->children, $templateField->getFields());
                 }
 
-                $result[] = ['name' => $field, 'value' => $repeaterValue];
+                $result[] = [
+                    'name' => $isGroup ? 'group_' . ($field + 1) : $field,
+                    'value' => $repeaterValue
+                ];
+            } else if ($isGroup) {
+                $result[] = [
+                    'name' => 'group_' . ((int)$field + 1),
+                    'value' => $this->getValuesByFields($modelFields, $templateField->getFields())
+                ];
             } else {
 
                 if ($type instanceof GalleryType && $type->hasCaptions()) {
