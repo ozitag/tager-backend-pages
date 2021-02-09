@@ -81,8 +81,8 @@ class Template
             return $this->fields[$name];
         }
 
-        if (substr($name, 0, 6) == 'group_') {
-            $groupIndex = intval(substr($name, 6));
+        if (substr($name, 0, 5) == 'group') {
+            $groupIndex = intval(substr($name, 5));
             if ($groupIndex && isset($this->fields[$groupIndex - 1]) && $this->fields[$groupIndex - 1] instanceof GroupField) {
                 return $this->fields[$groupIndex - 1];
             }

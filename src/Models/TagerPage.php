@@ -109,12 +109,12 @@ class TagerPage extends Model
                 }
 
                 $result[] = [
-                    'name' => $isGroup ? 'group_' . ($field + 1) : $field,
+                    'name' => $isGroup ? 'group' . ($field + 1) : $field,
                     'value' => $repeaterValue
                 ];
             } else if ($isGroup) {
                 $result[] = [
-                    'name' => 'group_' . ((int)$field + 1),
+                    'name' => 'group' . ((int)$field + 1),
                     'value' => $this->getValuesByFields($modelFields, $templateField->getFields())
                 ];
             } else {
