@@ -64,7 +64,11 @@ class Template
             'fields' => []
         ];
 
+        $index = 0;
         foreach ($this->getFields() as $param => $field) {
+            if ($field instanceof GroupField) {
+                $field->setGroupIndex(++$index);
+            }
             $result['fields'][] = $field->getJson();
         }
 
