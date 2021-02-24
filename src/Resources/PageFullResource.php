@@ -5,6 +5,7 @@ namespace OZiTAG\Tager\Backend\Pages\Resources;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\App;
 use Ozerich\FileStorage\Storage;
+use OZiTAG\Tager\Backend\Core\Utils\TagerVariables;
 use OZiTAG\Tager\Backend\Fields\Base\Field;
 use OZiTAG\Tager\Backend\Fields\Fields\GalleryField;
 use OZiTAG\Tager\Backend\Fields\Fields\GroupField;
@@ -18,12 +19,15 @@ use OZiTAG\Tager\Backend\Core\Resources\SeoParamsResource;
 
 class PageFullResource extends JsonResource
 {
-    /** @var Storage */
-    private $fileStorage;
+    private Storage $fileStorage;
+
+    protected TagerVariables $tagerVariables;
 
     public function __construct($resource)
     {
         $this->fileStorage = App::make(Storage::class);
+
+        $this->tagerVariables = App::make(TagerVariables::class);
 
         parent::__construct($resource);
     }
@@ -67,7 +71,7 @@ class PageFullResource extends JsonResource
                 $result[$field] = $repeaterValue;
             } else if ($templateField instanceof GroupField) {
                 $groupValue = $this->getValuesByFields($modelFields, $templateField->getFields());
-                if($groupValue) {
+                if ($groupValue) {
                     $result = array_merge($result, $groupValue);
                 }
             } else {
@@ -105,6 +109,10 @@ class PageFullResource extends JsonResource
                 }
 
                 $result[$field] = $type->getPublicValue();
+
+                if (is_string($result[$field])) {
+                    $result[$field] = $this->tagerVariables->processText($result[$field]);
+                }
             }
         }
 
