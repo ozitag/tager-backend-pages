@@ -2,6 +2,7 @@
 
 namespace OZiTAG\Tager\Backend\Pages\Operations;
 
+use Ozerich\FileStorage\Storage;
 use OZiTAG\Tager\Backend\Core\Features\Feature;
 use OZiTAG\Tager\Backend\Core\Jobs\Operation;
 use OZiTAG\Tager\Backend\Pages\Jobs\GetPageByIdJob;
@@ -47,7 +48,7 @@ class UpdatePageOperation extends Operation
             'model' => $page,
             'excerpt' => $request->excerpt,
             'body' => $request->body,
-            'imageId' => $request->image
+            'imageId' => Storage::fromUUIDtoId($request->image)
         ]);
 
         $page = $this->run(SetPageSeoParamsJob::class, [
@@ -56,7 +57,7 @@ class UpdatePageOperation extends Operation
             'description' => $request->pageDescription,
             'openGraphTitle' => $request->openGraphTitle,
             'openGraphDescription' => $request->openGraphDescription,
-            'openGraphImageId' => $request->openGraphImage
+            'openGraphImageId' => Storage::fromUUIDtoId($request->openGraphImage)
         ]);
 
         $page = $this->run(SetPageTemplateJob::class, [
