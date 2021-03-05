@@ -6,6 +6,9 @@ use Illuminate\Support\ServiceProvider;
 use OZiTAG\Tager\Backend\Pages\Enums\PageScope;
 use OZiTAG\Tager\Backend\Panel\TagerPanel;
 use OZiTAG\Tager\Backend\Rbac\TagerScopes;
+use OZiTAG\Tager\Backend\Seo\Models\TagerSeoTemplate;
+use OZiTAG\Tager\Backend\Seo\Structures\ParamsTemplate;
+use OZiTAG\Tager\Backend\Seo\TagerSeo;
 use OZiTAG\Tager\Backend\Sitemap\TagerSitemap;
 
 class PagesServiceProvider extends ServiceProvider
@@ -44,5 +47,10 @@ class PagesServiceProvider extends ServiceProvider
             PageScope::Edit => 'Edit Pages',
             PageScope::Delete => 'Delete Pages'
         ]);
+
+        TagerSeo::registerParamsTemplate('page', new ParamsTemplate(
+            'Page', ['title' => 'Title', 'excerpt' => 'Excerpt'], false,
+            '{{title}}', '{{excerpt}}'
+        ));
     }
 }

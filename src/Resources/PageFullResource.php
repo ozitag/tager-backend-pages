@@ -16,6 +16,7 @@ use OZiTAG\Tager\Backend\Pages\Models\TagerPageField;
 use OZiTAG\Tager\Backend\Pages\Utils\TagerPagesConfig;
 use OZiTAG\Tager\Backend\Pages\Utils\TagerPagesTemplates;
 use OZiTAG\Tager\Backend\Core\Resources\SeoParamsResource;
+use OZiTAG\Tager\Backend\Seo\TagerSeo;
 
 class PageFullResource extends JsonResource
 {
@@ -135,10 +136,17 @@ class PageFullResource extends JsonResource
 
     private function getSeoParams()
     {
-        $seoParams = new SeoParamsResource(
-            empty($this->page_title) == false ? $this->page_title : $this->title,
-            empty($this->page_description) == false ? $this->page_description : $this->excerpt
-        );
+        $title = $this->page_title ?? TagerSeo::getPageTitle('page', [
+                'title' => $this->title,
+                'excerpt' => $this->excerpt
+            ]);
+
+        $description = empty($this->page_description) == false ? $this->page_description : TagerSeo::getPageTitle('page', [
+            'title' => $this->title,
+            'excerpt' => $this->excerpt
+        ]);
+
+        $seoParams = new SeoParamsResource($title, $description);
 
         $openGraphUrl = null;
         if ($this->openGraphImage) {
