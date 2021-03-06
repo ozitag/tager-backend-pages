@@ -103,7 +103,7 @@ class SetPageTemplateJob extends Job
             foreach ($type->getFileIds() as $fileId) {
                 $this->pageFieldFilesRepository->create([
                     'field_id' => $item->id,
-                    'file_id' => $fileId
+                    'file_id' => Storage::fromUUIDtoId($fileId)
                 ]);
             }
         }
