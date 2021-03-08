@@ -4,8 +4,8 @@ namespace OZiTAG\Tager\Backend\Pages;
 
 use Carbon\Carbon;
 use OZiTAG\Tager\Backend\Pages\Repositories\PagesRepository;
-use OZiTAG\Tager\Backend\Sitemap\Contracts\ISitemapHandler;
-use OZiTAG\Tager\Backend\Sitemap\Structures\SitemapItem;
+use OZiTAG\Tager\Backend\Seo\Contracts\ISitemapHandler;
+use OZiTAG\Tager\Backend\Seo\Structures\SitemapItem;
 
 class PagesSitemapHandler implements ISitemapHandler
 {
