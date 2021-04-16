@@ -19,7 +19,7 @@ class TemplateRule implements Rule
     {
         $tagerTemplates = new TagerPagesTemplates();
         $template = $tagerTemplates->get($value);
-        
+
         if (!$template) {
             return false;
         }
@@ -34,6 +34,6 @@ class TemplateRule implements Rule
      */
     public function message()
     {
-        return 'Template not found';
+        return __('tager-pages::errors.template_not_found');
     }
 }

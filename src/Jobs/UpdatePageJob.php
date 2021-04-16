@@ -9,6 +9,8 @@ use OZiTAG\Tager\Backend\Pages\Repositories\PagesRepository;
 
 class UpdatePageJob extends Job
 {
+    protected TagerPage $model;
+
     private $urlPath;
 
     private $parentId;
@@ -36,15 +38,16 @@ class UpdatePageJob extends Job
 
         $exists = $repository->findByUrlPath($this->urlPath);
         if ($exists && $exists->id != $this->model->id) {
-            throw new InvalidUrlPathException('The page with URL "' . $this->urlPath . " already exists");
+            throw new InvalidUrlPathException(
+                __('tager-pages::errors.url_busy', ['url_path' => $this->urlPath])
+            );
         }
 
-        $model = $this->model;
-        $model->title = $this->title;
-        $model->parent_id = $parentPage ? $parentPage->id : null;
-        $model->url_path = $this->urlPath;
-        $model->save();
+        $this->model->title = $this->title;
+        $this->model->parent_id = $parentPage ? $parentPage->id : null;
+        $this->model->url_path = $this->urlPath;
+        $this->model->save();
 
-        return $model;
+        return $this->model;
     }
 }

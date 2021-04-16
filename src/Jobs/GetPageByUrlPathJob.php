@@ -19,7 +19,7 @@ class GetPageByUrlPathJob extends Job
         $model = $repository->findByUrlPath($this->path);
 
         if (!$model) {
-            abort(404, 'Page not found');
+            abort(404, __('tager-pages::errors.page_not_found'));
         }
 
         return $model;

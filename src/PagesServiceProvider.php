@@ -30,6 +30,7 @@ class PagesServiceProvider extends ServiceProvider
     {
         $this->loadRoutesFrom(__DIR__ . '/../routes/routes.php');
 
+        $this->loadTranslationsFrom(__DIR__ . '/../resources/lang', 'tager-pages');
         $this->loadMigrationsFrom(__DIR__ . '/../migrations');
 
         $this->publishes([
@@ -41,15 +42,16 @@ class PagesServiceProvider extends ServiceProvider
         TagerSeo::registerSitemapHandler(PagesSitemapHandler::class);
 
         TagerSeo::registerParamsTemplate('page', new ParamsTemplate(
-            'Page', ['title' => 'Title', 'excerpt' => 'Excerpt'], false,
-            '{{title}}', '{{excerpt}}'
-        ));
+            __('tager-pages::seo-template.title'), [
+            'title' => __('tager-pages::seo-template.field_title'),
+            'excerpt' => __('tager-pages::seo-template.field_excerpt')
+        ], false, '{{title}}', '{{excerpt}}'));
 
         TagerScopes::registerGroup('Pages', [
-            PageScope::View => 'View Pages',
-            PageScope::Create => 'Create Pages',
-            PageScope::Edit => 'Edit Pages',
-            PageScope::Delete => 'Delete Pages'
+            PageScope::View => __('tager-pages::scopes.view_pages'),
+            PageScope::Create => __('tager-pages::scopes.create_pages'),
+            PageScope::Edit => __('tager-pages::scopes.edit_pages'),
+            PageScope::Delete => __('tager-pages::scopes.delete_pages')
         ]);
     }
 }

@@ -13,6 +13,7 @@ use OZiTAG\Tager\Backend\Pages\Jobs\UpdatePageJob;
 use OZiTAG\Tager\Backend\Pages\Models\TagerPage;
 use OZiTAG\Tager\Backend\Pages\Requests\UpdatePageRequest;
 use OZiTAG\Tager\Backend\Pages\Resources\AdminPageFullResource;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class UpdatePageOperation extends Operation
 {
@@ -41,7 +42,7 @@ class UpdatePageOperation extends Operation
         ]);
 
         if (!$page) {
-            abort('400', 'Create page failed');
+            throw new BadRequestHttpException(__('tager-pages::errors.create_page_failed'));
         }
 
         $page = $this->run(SetPageMainParamsJob::class, [

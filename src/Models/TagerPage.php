@@ -9,12 +9,32 @@ use Ozerich\FileStorage\Models\File;
 use OZiTAG\Tager\Backend\Fields\Base\Field;
 use OZiTAG\Tager\Backend\Fields\Fields\GroupField;
 use OZiTAG\Tager\Backend\Fields\Fields\RepeaterField;
-use OZiTAG\Tager\Backend\Fields\TypeFactory;
-use OZiTAG\Tager\Backend\Fields\Types\ButtonType;
+use OZiTAG\Tager\Backend\Fields\Fields\TemplateField;
 use OZiTAG\Tager\Backend\Fields\Types\GalleryType;
-use OZiTAG\Tager\Backend\Pages\Utils\TagerPagesConfig;
 use OZiTAG\Tager\Backend\Pages\Utils\TagerPagesTemplates;
 
+/**
+ * Class TagerPage
+ * @package OZiTAG\Tager\Backend\Pages\Models
+ *
+ * @property int $id
+ * @property int $parent_id
+ * @property string $template
+ * @property int $image_id
+ * @property string $title
+ * @property string $excerpt
+ * @property string $body
+ * @property string $page_title
+ * @property string $page_description
+ * @property string $open_graph_title
+ * @property string $open_graph_description
+ * @property string $open_graph_image_id
+ *
+ * @property TagerPage $parent
+ * @property File $image
+ * @property File $openGraphImage
+ * @property TemplateField[] $templateFields
+ */
 class TagerPage extends Model
 {
     use NodeTrait;

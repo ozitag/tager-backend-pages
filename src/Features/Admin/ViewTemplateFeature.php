@@ -19,7 +19,7 @@ class ViewTemplateFeature extends Feature
     {
         $template = TagerPagesTemplates::get($this->alias);
         if (!$template) {
-            abort('404', 'Template not found');
+            abort('404', __('tager-pages::errors.template_not_found'));
         }
 
         return new JsonResource($template->getFullJson());
