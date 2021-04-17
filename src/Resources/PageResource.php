@@ -3,15 +3,19 @@
 namespace OZiTAG\Tager\Backend\Pages\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use OZiTAG\Tager\Backend\Pages\Models\TagerPage;
 
 class PageResource extends JsonResource
 {
     public function toArray($request)
     {
+        /** @var TagerPage $model */
+        $model = $this->resource;
+
         return [
-            'id' => $this->id,
-            'path' => $this->url_path,
-            'template' => $this->template,
+            'id' => $model->id,
+            'path' => $model->url_path,
+            'template' => $model->template,
         ];
     }
 }

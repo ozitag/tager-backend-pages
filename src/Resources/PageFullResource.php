@@ -7,16 +7,13 @@ use Illuminate\Support\Facades\App;
 use Ozerich\FileStorage\Storage;
 use OZiTAG\Tager\Backend\Core\Utils\TagerVariables;
 use OZiTAG\Tager\Backend\Fields\Base\Field;
-use OZiTAG\Tager\Backend\Fields\Fields\GalleryField;
 use OZiTAG\Tager\Backend\Fields\Fields\GroupField;
 use OZiTAG\Tager\Backend\Fields\Fields\RepeaterField;
-use OZiTAG\Tager\Backend\Fields\TypeFactory;
 use OZiTAG\Tager\Backend\Fields\Types\GalleryType;
+use OZiTAG\Tager\Backend\Pages\Models\TagerPage;
 use OZiTAG\Tager\Backend\Pages\Models\TagerPageField;
-use OZiTAG\Tager\Backend\Pages\Utils\TagerPagesConfig;
 use OZiTAG\Tager\Backend\Pages\Utils\TagerPagesTemplates;
 use OZiTAG\Tager\Backend\Core\Resources\SeoParamsResource;
-use OZiTAG\Tager\Backend\Seo\TagerSeo;
 
 class PageFullResource extends JsonResource
 {
@@ -122,60 +119,58 @@ class PageFullResource extends JsonResource
 
     private function getTemplateValuesJson()
     {
-        if (!$this->template) {
+        /** @var TagerPage $model */
+        $model = $this->resource;
+
+        if (!$model->template) {
             return null;
         }
 
-        $template = TagerPagesTemplates::get($this->template);
+        $template = TagerPagesTemplates::get($model->template);
         if (!$template) {
             return null;
         }
 
-        return $this->getValuesByFields($this->templateFields, $template->getFields());
+        return $this->getValuesByFields($model->templateFields, $template->getFields());
     }
 
     private function getSeoParams()
     {
-        $title = $this->page_title ?? TagerSeo::getPageTitle('page', [
-                'title' => $this->title,
-                'excerpt' => $this->excerpt
-            ]);
+        /** @var TagerPage $model */
+        $model = $this->resource;
 
-        $description = empty($this->page_description) == false ? $this->page_description : TagerSeo::getPageTitle('page', [
-            'title' => $this->title,
-            'excerpt' => $this->excerpt
-        ]);
+        $seoParams = new SeoParamsResource($model->getWebPageUrl(), $model->getWebPageDescription());
 
-        $seoParams = new SeoParamsResource($title, $description);
-
-        $openGraphUrl = null;
-        if ($this->openGraphImage) {
-            $openGraphUrl = $this->openGraphImage->getDefaultThumbnailUrl(TagerPagesConfig::getOpenGraphScenario());
-        }
-
-        $seoParams->setOpenGraph($openGraphUrl, $this->open_graph_title, $this->open_graph_description);
+        $seoParams->setOpenGraph(
+            $model->getWebOpenGraphImageUrl(),
+            $model->getWebPageUrl(),
+            $model->getWebPageDescription()
+        );
 
         return $seoParams;
     }
 
     public function toArray($request)
     {
-        $parentJson = $this->parent ? [
-            'id' => $this->parent->id,
-            'title' => $this->parent->title,
-            'path' => $this->parent->url_path
+        /** @var TagerPage $model */
+        $model = $this->resource;
+
+        $parentJson = $model->parent ? [
+            'id' => $model->parent->id,
+            'title' => $model->parent->title,
+            'path' => $model->parent->url_path
         ] : null;
 
         return [
-            'id' => $this->id,
-            'title' => $this->title,
-            'path' => $this->url_path,
+            'id' => $model->id,
+            'title' => $model->title,
+            'path' => $model->url_path,
             'parent' => $parentJson,
-            'image' => $this->image ? $this->image->getFullJson() : null,
-            'excerpt' => $this->excerpt,
-            'body' => $this->body,
+            'image' => $model->image ? $model->image->getFullJson() : null,
+            'excerpt' => $model->excerpt,
+            'body' => $model->body,
             'seoParams' => $this->getSeoParams(),
-            'template' => $this->template,
+            'template' => $model->template,
             'templateFields' => $this->getTemplateValuesJson()
         ];
     }

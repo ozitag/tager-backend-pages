@@ -10,16 +10,11 @@ use OZiTAG\Tager\Backend\Pages\Utils\TagerPagesConfig;
 
 class SetPageSeoParamsJob extends Job
 {
-    /** @var TagerPage */
-    private $model;
+    private TagerPage $model;
 
-    private $title;
+    private ?string $title;
 
-    private $description;
-
-    private $openGraphTitle;
-
-    private $openGraphDescription;
+    private ?string $description;
 
     private $openGraphImageId;
 
@@ -37,8 +32,6 @@ class SetPageSeoParamsJob extends Job
     {
         $this->model->page_title = $this->title;
         $this->model->page_description = $this->description;
-        $this->model->open_graph_title = $this->openGraphTitle;
-        $this->model->open_graph_description = $this->openGraphDescription;
 
         if ($this->openGraphImageId) {
             $image = $fileRepository->find($this->openGraphImageId);

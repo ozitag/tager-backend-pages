@@ -8,8 +8,7 @@ use OZiTAG\Tager\Backend\Panel\Structures\TagerRouteHandlerResult;
 
 class PagesPanelRouteHandler implements IRouteHandler
 {
-    /** @var PagesRepository */
-    private $pagesRepository;
+    protected PagesRepository $pagesRepository;
 
     public function __construct(PagesRepository $pagesRepository)
     {
@@ -19,15 +18,14 @@ class PagesPanelRouteHandler implements IRouteHandler
     public function handle($route, $matches)
     {
         $model = $this->pagesRepository->findByUrlPath($route);
-
         if (!$model) {
             return null;
         }
 
         $result = new TagerRouteHandlerResult();
 
-        $result->setModel('Page', $model->title);
-        $result->addAction('Edit Page', '/pages/' . $model->id);
+        $result->setModel($model->getPanelType(), $model->getPanelTitle());
+        $result->addAction(__('tager-pages::panel.edit'), '/pages/' . $model->id);
 
         return $result;
     }

@@ -17,11 +17,9 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class UpdatePageOperation extends Operation
 {
-    /** @var TagerPage */
-    private $model;
+    private TagerPage $model;
 
-    /** @var UpdatePageRequest */
-    private $request;
+    private UpdatePageRequest $request;
 
     public function __construct(TagerPage $model, UpdatePageRequest $request)
     {
@@ -56,8 +54,6 @@ class UpdatePageOperation extends Operation
             'model' => $page,
             'title' => $request->pageTitle,
             'description' => $request->pageDescription,
-            'openGraphTitle' => $request->openGraphTitle,
-            'openGraphDescription' => $request->openGraphDescription,
             'openGraphImageId' => Storage::fromUUIDtoId($request->openGraphImage)
         ]);
 

@@ -2,16 +2,19 @@
 
 namespace OZiTAG\Tager\Backend\Pages\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Web\Shops\Helpers\ShopUrlHelper;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Kalnoy\Nestedset\NodeTrait;
 use Ozerich\FileStorage\Models\File;
+use OZiTAG\Tager\Backend\Core\Models\Contracts\IPublicWebModel;
+use OZiTAG\Tager\Backend\Core\Models\TModel;
 use OZiTAG\Tager\Backend\Fields\Base\Field;
 use OZiTAG\Tager\Backend\Fields\Fields\GroupField;
 use OZiTAG\Tager\Backend\Fields\Fields\RepeaterField;
-use OZiTAG\Tager\Backend\Fields\Fields\TemplateField;
 use OZiTAG\Tager\Backend\Fields\Types\GalleryType;
+use OZiTAG\Tager\Backend\Pages\Utils\TagerPagesConfig;
 use OZiTAG\Tager\Backend\Pages\Utils\TagerPagesTemplates;
+use OZiTAG\Tager\Backend\Seo\TagerSeo;
 
 /**
  * Class TagerPage
@@ -19,6 +22,7 @@ use OZiTAG\Tager\Backend\Pages\Utils\TagerPagesTemplates;
  *
  * @property int $id
  * @property int $parent_id
+ * @property string $url_path
  * @property string $template
  * @property int $image_id
  * @property string $title
@@ -26,28 +30,23 @@ use OZiTAG\Tager\Backend\Pages\Utils\TagerPagesTemplates;
  * @property string $body
  * @property string $page_title
  * @property string $page_description
- * @property string $open_graph_title
- * @property string $open_graph_description
  * @property string $open_graph_image_id
  *
  * @property TagerPage $parent
  * @property File $image
  * @property File $openGraphImage
- * @property TemplateField[] $templateFields
+ * @property TagerPageField[] $templateFields
  */
-class TagerPage extends Model
+class TagerPage extends TModel implements IPublicWebModel
 {
     use NodeTrait;
 
     use SoftDeletes;
 
+    public static $defaultOrder = 'id desc';
+
     protected $table = 'tager_pages';
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
     protected $fillable = [
         'parent_id',
         'template',
@@ -58,8 +57,6 @@ class TagerPage extends Model
         'body',
         'page_title',
         'page_description',
-        'open_graph_title',
-        'open_graph_description',
         'open_graph_image_id'
     ];
 
@@ -83,13 +80,18 @@ class TagerPage extends Model
         return $this->hasMany(TagerPageField::class, 'page_id');
     }
 
-    /**
-     * @param array $modelFields
-     * @param Field[] $templateFields
-     * @return array
-     * @throws \OZiTAG\Tager\Backend\Fields\Exceptions\InvalidTypeException
-     */
-    private function getValuesByFields($modelFields, $templateFields)
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::deleted(function (self $page) {
+            $page->image()->delete();
+
+            $page->openGraphImage()->delete();
+        });
+    }
+
+    private function getValuesByFields(array $modelFields, array $templateFields): array
     {
         $result = [];
 
@@ -197,5 +199,42 @@ class TagerPage extends Model
 
         $template = TagerPagesTemplates::get($this->template);
         return $template ? $template->getLabel() : $this->template . ' (Template not found)';
+    }
+
+    public function getWebPageUrl(): string
+    {
+        return $this->url_path;
+    }
+
+    public function getWebPageTitle(): string
+    {
+        return $this->page_title ?? TagerSeo::getPageTitle('page', [
+                'title' => $this->title,
+                'excerpt' => $this->excerpt
+            ]);
+    }
+
+    public function getWebPageDescription(): ?string
+    {
+        return $this->page_description ?? TagerSeo::getPageTitle('page', [
+                'title' => $this->title,
+                'excerpt' => $this->excerpt
+            ]);
+    }
+
+    public function getWebOpenGraphImageUrl(): ?string
+    {
+        return $this->openGraphImage ?
+            $this->openGraphImage->getDefaultThumbnailUrl(TagerPagesConfig::getOpenGraphScenario()) : null;
+    }
+
+    public function getPanelType(): ?string
+    {
+        return __('tager-pages::panel.type');
+    }
+
+    public function getPanelTitle(): ?string
+    {
+        return $this->title;
     }
 }
