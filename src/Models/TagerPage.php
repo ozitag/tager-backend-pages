@@ -3,6 +3,7 @@
 namespace OZiTAG\Tager\Backend\Pages\Models;
 
 use App\Web\Shops\Helpers\ShopUrlHelper;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Kalnoy\Nestedset\NodeTrait;
 use Ozerich\FileStorage\Models\File;
@@ -91,7 +92,7 @@ class TagerPage extends TModel implements IPublicWebModel
         });
     }
 
-    private function getValuesByFields(array $modelFields, array $templateFields): array
+    private function getValuesByFields(Collection $modelFields, array $templateFields): array
     {
         $result = [];
 
