@@ -139,11 +139,11 @@ class PageFullResource extends JsonResource
         /** @var TagerPage $model */
         $model = $this->resource;
 
-        $seoParams = new SeoParamsResource($model->getWebPageUrl(), $model->getWebPageDescription());
+        $seoParams = new SeoParamsResource($model->getWebPageTitle(), $model->getWebPageDescription());
 
         $seoParams->setOpenGraph(
             $model->getWebOpenGraphImageUrl(),
-            $model->getWebPageUrl(),
+            $model->getWebPageTitle(),
             $model->getWebPageDescription()
         );
 
