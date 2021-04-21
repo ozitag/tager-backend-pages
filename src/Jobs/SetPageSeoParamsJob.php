@@ -16,15 +16,13 @@ class SetPageSeoParamsJob extends Job
 
     private ?string $description;
 
-    private $openGraphImageId;
+    private ?int $openGraphImageId;
 
-    public function __construct(TagerPage $model, $title, $description, $openGraphTitle, $openGraphDescription, $openGraphImageId)
+    public function __construct(TagerPage $model, ?string $title = null, ?string $description = null, $openGraphImageId = null)
     {
         $this->model = $model;
         $this->title = $title;
         $this->description = $description;
-        $this->openGraphTitle = $openGraphTitle;
-        $this->openGraphDescription = $openGraphDescription;
         $this->openGraphImageId = $openGraphImageId;
     }
 
