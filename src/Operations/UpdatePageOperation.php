@@ -54,6 +54,7 @@ class UpdatePageOperation extends Operation
             'model' => $page,
             'title' => $request->pageTitle,
             'description' => $request->pageDescription,
+            'keywords' => $request->pageKeywords,
             'openGraphImageId' => Storage::fromUUIDtoId($request->openGraphImage)
         ]);
 

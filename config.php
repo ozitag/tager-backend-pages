@@ -8,6 +8,9 @@ return [
         'content' => '',
         'openGraph' => ''
     ],
+    
+    'seoKeywordsEnabled' => false,
+    
     'templates' => [
         'home' => [
             'label' => 'Home Page',

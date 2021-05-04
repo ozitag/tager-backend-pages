@@ -54,8 +54,7 @@ class AdminPagesController extends AdminCrudController
             'body',
             'pageTitle' => 'page_title',
             'pageDescription' => 'page_description',
-            'openGraphTitle' => 'open_graph_title',
-            'openGraphDescription' => 'open_graph_description',
+            'pageKeywords' => 'page_keywords',
             'openGraphImage:file:model',
             'templateValues' => 'templateValuesJson'
         ]));

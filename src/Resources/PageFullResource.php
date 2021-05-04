@@ -139,7 +139,11 @@ class PageFullResource extends JsonResource
         /** @var TagerPage $model */
         $model = $this->resource;
 
-        $seoParams = new SeoParamsResource($model->getWebPageTitle(), $model->getWebPageDescription());
+        $seoParams = new SeoParamsResource(
+            $model->getWebPageTitle(),
+            $model->getWebPageDescription(),
+            $model->getWebPageKeywords()
+        );
 
         $seoParams->setOpenGraph(
             $model->getWebOpenGraphImageUrl(),
@@ -171,7 +175,7 @@ class PageFullResource extends JsonResource
             'body' => $model->body,
             'seoParams' => $this->getSeoParams(),
             'template' => $model->template,
-            'templateFields' => $this->getTemplateValuesJson()
+            'templateFields' => $this->getTemplateValuesJson(),
         ];
     }
 }

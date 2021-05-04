@@ -11,7 +11,7 @@ class ModuleInfoFeature extends Feature
     public function handle()
     {
         return new JsonResource([
-            'contentImageScenario' => TagerPagesConfig::getContentImageScenario(),
+            'seoKeywordsEnabled' => TagerPagesConfig::isSeoKeywordsEnabled(),
             'fileScenarios' => [
                 'image' => TagerPagesConfig::getPageImageScenario(),
                 'content' => TagerPagesConfig::getContentImageScenario(),

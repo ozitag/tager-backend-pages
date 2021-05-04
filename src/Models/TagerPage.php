@@ -31,6 +31,7 @@ use OZiTAG\Tager\Backend\Seo\TagerSeo;
  * @property string $body
  * @property string $page_title
  * @property string $page_description
+ * @property string $page_keywords
  * @property string $open_graph_image_id
  *
  * @property TagerPage $parent
@@ -58,6 +59,7 @@ class TagerPage extends TModel implements IPublicWebModel
         'body',
         'page_title',
         'page_description',
+        'page_keywords',
         'open_graph_image_id'
     ];
 
@@ -223,11 +225,20 @@ class TagerPage extends TModel implements IPublicWebModel
             ]);
     }
 
+    public function getWebPageKeywords(): ?string
+    {
+        return $this->page_keywords ?? TagerSeo::getPageKeywords('page', [
+                'title' => $this->title,
+                'excerpt' => $this->excerpt
+            ]);
+    }
+
     public function getWebOpenGraphImageUrl(): ?string
     {
         return $this->openGraphImage ?
             $this->openGraphImage->getDefaultThumbnailUrl(TagerPagesConfig::getOpenGraphScenario()) : null;
     }
+
 
     public function getPanelType(): ?string
     {

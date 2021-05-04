@@ -33,4 +33,9 @@ class TagerPagesConfig
     {
         return self::config('templates', []);
     }
+
+    public static function isSeoKeywordsEnabled(): bool
+    {
+        return (bool)self::config('seoKeywordsEnabled', false);
+    }
 }
