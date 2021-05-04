@@ -39,7 +39,7 @@ class PagesRepository extends EloquentRepository implements IRepositoryCrudTreeR
     {
         switch ($key) {
             case 'template':
-                return $builder->whereIn('type', explode(',', $value));
+                return $builder->whereIn('template', explode(',', $value));
             default:
                 return $builder;
         }
