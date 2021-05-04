@@ -17,7 +17,7 @@ return [
             'fields' => [
                 'title' => [
                     'type' => FieldType::String,
-                    'labeel' => 'Head Title'
+                    'label' => 'Head Title'
                 ]
             ]
         ]
