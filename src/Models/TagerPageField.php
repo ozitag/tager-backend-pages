@@ -35,7 +35,7 @@ class TagerPageField extends Model
             'tager_page_field_files',
             'field_id',
             'file_id'
-        );
+        )->orderBy('tager_page_field_files.id', 'asc');
     }
 
     public function children()
