@@ -18,8 +18,7 @@
     "ozitag/tager-backend-fields": "^1.2.2",
     "ozitag/tager-backend-crud": "^1.3",
     "ozitag/tager-backend-panel": "^1.0",
-    "ozitag/tager-backend-seo": "^1.0",
-    "kalnoy/nestedset": "^5.0"
+    "ozitag/tager-backend-seo": "^1.0"
   },
   "autoload": {
     "psr-4": {
