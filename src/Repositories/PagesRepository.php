@@ -26,6 +26,26 @@ class PagesRepository extends EloquentRepository implements IRepositoryCrudTreeR
         return $this->model::query()->whereUrlPath($urlPath)->first();
     }
 
+    public function search($searchQuery, $offset = 0, $limit = null)
+    {
+        $query = $this->model::query()->orderBy('date', 'desc');
+
+        if ($offset !== null) {
+            $query->skip($offset);
+            $query->take(999999999);
+        }
+
+        if ($limit !== null) {
+            $query->take($limit);
+        }
+
+        $query->where('title', 'LIKE', '%' . $searchQuery . '%')
+            ->orWhere('excerpt', 'LIKE', '%' . $searchQuery . '%')
+            ->orWhere('body', 'LIKE', '%' . $searchQuery . '%');
+
+        return $query->get();
+    }
+
     public function searchByQuery(?string $query, Builder $builder = null): ?Builder
     {
         $builder = $builder ? $builder : $this->model;
