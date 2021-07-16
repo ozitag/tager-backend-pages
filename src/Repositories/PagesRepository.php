@@ -28,7 +28,7 @@ class PagesRepository extends EloquentRepository implements IRepositoryCrudTreeR
 
     public function search($searchQuery, $offset = 0, $limit = null)
     {
-        $query = $this->model::query()->orderBy('date', 'desc');
+        $query = $this->model::query();
 
         if ($offset !== null) {
             $query->skip($offset);
