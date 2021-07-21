@@ -23,6 +23,8 @@ class PagesRepository extends EloquentRepository implements IRepositoryCrudTreeR
 
     public function findByUrlPath($urlPath): ?TagerPage
     {
+        $urlPath = preg_replace('#\/+$#si', '', $urlPath);
+
         return $this->model::query()->whereUrlPath($urlPath)->first();
     }
 
