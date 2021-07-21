@@ -16,11 +16,6 @@ class PagesRepository extends EloquentRepository implements IRepositoryCrudTreeR
         parent::__construct($model);
     }
 
-    public function findByAlias($alias): ?TagerPage
-    {
-        return $this->model::query()->whereAlias($alias)->first();
-    }
-
     public function findByUrlPath($urlPath): ?TagerPage
     {
         $urlPath = preg_replace('#\/+$#si', '', $urlPath);
@@ -66,5 +61,4 @@ class PagesRepository extends EloquentRepository implements IRepositoryCrudTreeR
                 return $builder;
         }
     }
-
 }
