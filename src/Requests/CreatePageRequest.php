@@ -32,11 +32,15 @@ class CreatePageRequest extends CrudFormRequest
     {
         $path = $this->path;
         if (empty($path)) {
-            return null;
+            return '/';
+        }
+
+        if (substr($path, 0, 1) !== '/') {
+            $path = '/' . $path;
         }
 
         $path = preg_replace('#\/+$#si', '', $path);
-        if(empty($path)){
+        if (empty($path)) {
             $path = '/';
         }
 

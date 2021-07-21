@@ -28,8 +28,12 @@ class UrlPathRule implements Rule
     {
         $this->value = $value;
         $path = preg_replace('#\/+$#si', '', $value);
-        if(empty($path)){
+        if (empty($path)) {
             $path = '/';
+        }
+
+        if (substr($path, 0, 1) !== '/') {
+            $path = '/' . $path;
         }
 
         /** @var PagesRepository $repository */

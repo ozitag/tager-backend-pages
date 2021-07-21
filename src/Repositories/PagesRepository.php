@@ -23,6 +23,10 @@ class PagesRepository extends EloquentRepository implements IRepositoryCrudTreeR
             $urlPath = '/';
         }
 
+        if (substr($urlPath, 0, 1) !== '/') {
+            $urlPath = '/' . $urlPath;
+        }
+
         return $this->model::query()->whereUrlPath($urlPath)->first();
     }
 
