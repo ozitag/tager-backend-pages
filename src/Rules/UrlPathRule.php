@@ -28,6 +28,9 @@ class UrlPathRule implements Rule
     {
         $this->value = $value;
         $path = preg_replace('#\/+$#si', '', $value);
+        if(empty($path)){
+            $path = '/';
+        }
 
         /** @var PagesRepository $repository */
         $repository = App::make(PagesRepository::class);

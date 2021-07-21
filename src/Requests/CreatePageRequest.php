@@ -35,6 +35,11 @@ class CreatePageRequest extends CrudFormRequest
             return null;
         }
 
-        return preg_replace('#\/+$#si', '', $path);
+        $path = preg_replace('#\/+$#si', '', $path);
+        if(empty($path)){
+            $path = '/';
+        }
+
+        return $path;
     }
 }
