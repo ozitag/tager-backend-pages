@@ -25,22 +25,15 @@ class CreatePageOperation extends Operation
 
     public function handle(PagesRepository $repository)
     {
-        $urlPath = $this->run(GetPageUrlPathJob::class, [
-            'title' => $this->request->title,
-            'parentId' => $this->request->parent
-        ]);
-
         $model = $repository->createModelInstance();
         $model->title = $this->request->title;
         $model->parent_id = $this->request->parent;
-        $model->url_path = $urlPath;
+        $model->url_path = $this->request->getPath();
         $model->save();
 
-        $page = $this->run(SetPageTemplateJob::class, [
+        return $this->run(SetPageTemplateJob::class, [
             'model' => $model,
             'template' => $this->request->template
         ]);
-
-        return $page;
     }
 }
