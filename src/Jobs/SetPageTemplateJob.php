@@ -2,20 +2,15 @@
 
 namespace OZiTAG\Tager\Backend\Pages\Jobs;
 
-use Ozerich\FileStorage\Repositories\FileRepository;
-use Ozerich\FileStorage\Repositories\IFileRepository;
 use Ozerich\FileStorage\Storage;
 use OZiTAG\Tager\Backend\Core\Jobs\Job;
 use OZiTAG\Tager\Backend\Fields\Base\Field;
-use OZiTAG\Tager\Backend\Fields\Enums\FieldType;
 use OZiTAG\Tager\Backend\Fields\Fields\GroupField;
 use OZiTAG\Tager\Backend\Fields\Fields\RepeaterField;
-use OZiTAG\Tager\Backend\Fields\TypeFactory;
 use OZiTAG\Tager\Backend\Pages\Models\TagerPage;
 use OZiTAG\Tager\Backend\Pages\Models\TagerPageField;
 use OZiTAG\Tager\Backend\Pages\Repositories\PageFieldFilesRepository;
 use OZiTAG\Tager\Backend\Pages\Repositories\PageFieldsRepository;
-use OZiTAG\Tager\Backend\Pages\Utils\TagerPagesConfig;
 use OZiTAG\Tager\Backend\Pages\Utils\TagerPagesTemplates;
 
 class SetPageTemplateJob extends Job
@@ -32,9 +27,6 @@ class SetPageTemplateJob extends Job
 
     /** @var PageFieldFilesRepository */
     private $pageFieldFilesRepository;
-
-    /** @var Storage */
-    private $fileStorage;
 
     public function __construct($model, $template, $fields = [])
     {
@@ -109,11 +101,10 @@ class SetPageTemplateJob extends Job
         }
     }
 
-    public function handle(PageFieldsRepository $repository, PageFieldFilesRepository $pageFieldFilesRepository, Storage $storage)
+    public function handle(PageFieldsRepository $repository, PageFieldFilesRepository $pageFieldFilesRepository)
     {
         $this->pageFieldsRepository = $repository;
         $this->pageFieldFilesRepository = $pageFieldFilesRepository;
-        $this->fileStorage = $storage;
 
         if (!$this->template) {
             $this->model->template = $this->template;
