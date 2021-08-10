@@ -6,6 +6,7 @@ use OZiTAG\Tager\Backend\Crud\Actions\DeleteAction;
 use OZiTAG\Tager\Backend\Crud\Actions\IndexAction;
 use OZiTAG\Tager\Backend\Crud\Actions\StoreOrUpdateAction;
 use OZiTAG\Tager\Backend\Crud\Controllers\AdminCrudController;
+use OZiTAG\Tager\Backend\Pages\Events\PageDeletedEvent;
 use OZiTAG\Tager\Backend\Pages\Events\PageUpdatedEvent;
 use OZiTAG\Tager\Backend\Pages\Jobs\CheckIfCanDeletePageJob;
 use OZiTAG\Tager\Backend\Pages\Operations\CreatePageOperation;
@@ -40,7 +41,7 @@ class AdminPagesController extends AdminCrudController
             PageUpdatedEvent::class
         ));
 
-        $this->setDeleteAction(new DeleteAction(CheckIfCanDeletePageJob::class));
+        $this->setDeleteAction(new DeleteAction(CheckIfCanDeletePageJob::class, PageDeletedEvent::class));
 
         $fields = [
             'id',
