@@ -1,6 +1,6 @@
 <?php
 
-namespace OZiTAG\Tager\Backend\Events;
+namespace OZiTAG\Tager\Backend\Pages\Events;
 
 use Illuminate\Support\Facades\App;
 use OZiTAG\Tager\Backend\Crud\Events\UpdateModelEvent;
