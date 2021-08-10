@@ -249,4 +249,9 @@ class TagerPage extends TModel implements IPublicWebModel
     {
         return $this->title;
     }
+
+    public function getPageFieldValue(string $field): ?string
+    {
+        return $this->templateFields()->where('field', '=', $field)->pluck('value');
+    }
 }
