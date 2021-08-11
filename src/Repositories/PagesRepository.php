@@ -3,7 +3,7 @@
 namespace OZiTAG\Tager\Backend\Pages\Repositories;
 
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\DB;
 use OZiTAG\Tager\Backend\Core\Repositories\EloquentRepository;
 use OZiTAG\Tager\Backend\Core\Repositories\IFilterable;
 use OZiTAG\Tager\Backend\Core\Repositories\ISearchable;
@@ -65,6 +65,18 @@ class PagesRepository extends EloquentRepository implements IRepositoryCrudTreeR
         switch ($key) {
             case 'template':
                 return $builder->whereIn('template', explode(',', $value));
+            case 'parent':
+                $allChildrenIds = [];
+                $childrenIds = explode(',', $value);
+                do {
+                    $allChildrenIds = array_merge($allChildrenIds, $childrenIds);
+                    $childrenIds = DB::table('tager_pages')
+                        ->whereIn('parent_id', $childrenIds)
+                        ->select('id')->pluck('id')->toArray();
+                } while (!empty($childrenIds));
+
+                return $builder->whereIn('id', explode(',', $value))
+                    ->orWhereIn('parent_id', $allChildrenIds);
             default:
                 return $builder;
         }
