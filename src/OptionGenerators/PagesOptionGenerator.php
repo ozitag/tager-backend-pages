@@ -3,7 +3,6 @@
 namespace OZiTAG\Tager\Backend\Pages\OptionGenerators;
 
 use OZiTAG\Tager\Backend\Fields\Contracts\ISelectOptionsGenerator;
-use OZiTAG\Tager\Backend\Pages\Models\TagerPage;
 use OZiTAG\Tager\Backend\Pages\Repositories\PagesRepository;
 
 class PagesOptionGenerator implements ISelectOptionsGenerator
