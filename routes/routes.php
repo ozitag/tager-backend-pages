@@ -10,7 +10,7 @@ use OZiTAG\Tager\Backend\Pages\Enums\PageScope;
 
 Route::group(['middleware' => 'api.cache'], function () {
     Route::get('/tager/pages', [PublicController::class, 'index']);
-    Route::get('/tager/pages/{id}', [PublicController::class, 'viewById']);
+    Route::get('/tager/pages/{id}', [PublicController::class, 'view']);
     Route::get('/tager/pages/view', [PublicController::class, 'viewByPath']);
 });
 

@@ -4,22 +4,22 @@ namespace OZiTAG\Tager\Backend\Pages\Controllers;
 
 use Illuminate\Http\Request;
 use OZiTAG\Tager\Backend\Core\Controllers\Controller;
+use OZiTAG\Tager\Backend\Core\Repositories\EloquentRepository;
+use OZiTAG\Tager\Backend\Crud\Controllers\PublicCrudController;
 use OZiTAG\Tager\Backend\Pages\Features\Guest\ListPagesFeature;
 use OZiTAG\Tager\Backend\Pages\Features\Guest\ViewByIdPageFeature;
 use OZiTAG\Tager\Backend\Pages\Features\Guest\ViewByPathPageFeature;
+use OZiTAG\Tager\Backend\Pages\Repositories\PagesRepository;
+use OZiTAG\Tager\Backend\Pages\Resources\PageFullResource;
+use OZiTAG\Tager\Backend\Pages\Resources\PageResource;
 
-class PublicController extends Controller
+class PublicController extends PublicCrudController
 {
-    public function index()
+    public function __construct(PagesRepository $repository, ?string $getModelJobClass = null)
     {
-        return $this->serve(ListPagesFeature::class);
-    }
+        parent::__construct($repository);
 
-    public function viewById($id)
-    {
-        return $this->serve(ViewByIdPageFeature::class, [
-            'id' => $id
-        ]);
+        $this->setResourceClasses(PageResource::class, PageFullResource::class);
     }
 
     public function viewByPath(Request $request)

@@ -14,6 +14,7 @@ class PageResource extends JsonResource
 
         return [
             'id' => $model->id,
+            'title' => $model->title,
             'path' => $model->url_path,
             'template' => $model->template,
         ];
