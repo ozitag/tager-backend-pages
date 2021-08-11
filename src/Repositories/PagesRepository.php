@@ -70,6 +70,7 @@ class PagesRepository extends EloquentRepository implements IRepositoryCrudTreeR
                     return $builder;
                 }
                 return $builder->groupBy('tager_pages.id')->select('tager_pages.*')
+                    ->whereNull('tp2.deleted_at')
                     ->join('tager_pages as tp2', 'tager_pages.id','=','tp2.parent_id');
             case 'parent':
                 $allChildrenIds = [];
