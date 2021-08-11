@@ -3,6 +3,7 @@
 namespace OZiTAG\Tager\Backend\Pages\Repositories;
 
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use OZiTAG\Tager\Backend\Core\Repositories\EloquentRepository;
 use OZiTAG\Tager\Backend\Core\Repositories\IFilterable;
 use OZiTAG\Tager\Backend\Core\Repositories\ISearchable;
@@ -19,7 +20,7 @@ class PagesRepository extends EloquentRepository implements IRepositoryCrudTreeR
     public function findByUrlPath($urlPath): ?TagerPage
     {
         $urlPath = preg_replace('#\/+$#si', '', $urlPath);
-        if(empty($urlPath)){
+        if (empty($urlPath)) {
             $urlPath = '/';
         }
 
@@ -67,5 +68,10 @@ class PagesRepository extends EloquentRepository implements IRepositoryCrudTreeR
             default:
                 return $builder;
         }
+    }
+
+    public function findByTemplate(string $template): Builder
+    {
+        return $this->model::query()->where('template', '=', $template);
     }
 }
