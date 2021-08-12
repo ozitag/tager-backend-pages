@@ -29,6 +29,7 @@ use OZiTAG\Tager\Backend\Seo\TagerSeo;
  * @property string $title
  * @property string $excerpt
  * @property string $body
+ * @property string $datetime
  * @property string $page_title
  * @property string $page_description
  * @property string $page_keywords
@@ -57,6 +58,7 @@ class TagerPage extends TModel implements IPublicWebModel
         'title',
         'excerpt',
         'body',
+        'datetime',
         'page_title',
         'page_description',
         'page_keywords',

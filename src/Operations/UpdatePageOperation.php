@@ -36,7 +36,8 @@ class UpdatePageOperation extends Operation
             'model' => $this->model,
             'urlPath' => $request->getPath(),
             'parentId' => $request->parent,
-            'title' => $request->title
+            'title' => $request->title,
+            'datetime' => $request->datetime,
         ]);
 
         if (!$page) {

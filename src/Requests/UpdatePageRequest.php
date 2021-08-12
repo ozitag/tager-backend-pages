@@ -19,6 +19,7 @@ class UpdatePageRequest extends CreatePageRequest
             'image' => ['nullable', new FileRule()],
             'excerpt' => 'nullable|string',
             'body' => 'nullable|string',
+            'datetime' => 'nullable|date',
             'pageTitle' => 'nullable|string',
             'pageDescription' => 'nullable|string',
             'pageKeywords' => 'nullable|string',
