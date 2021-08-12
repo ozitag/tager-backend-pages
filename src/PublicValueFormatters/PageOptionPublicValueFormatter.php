@@ -27,6 +27,8 @@ class PageOptionPublicValueFormatter implements IPublicValueFormatter
             'id' => $page->id,
             'url' => $page->getWebPageUrl(),
             'title' => $page->title,
+            'excerpt' => $page->excerpt,
+            'image' => $page->image ? $page->image->getFullJson() : null
         ];
     }
 }
