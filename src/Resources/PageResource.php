@@ -17,6 +17,8 @@ class PageResource extends JsonResource
             'title' => $model->title,
             'path' => $model->url_path,
             'template' => $model->template,
+            'excerpt' => $model->excerpt,
+            'image' => $model->image ? $model->image->getFullJson() : null,
             'datetime' => $model->datetime,
         ];
     }
