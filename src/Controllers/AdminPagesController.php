@@ -61,6 +61,7 @@ class AdminPagesController extends AdminCrudController
 
         $this->setFullResourceFields(array_merge($fields, [
             'template',
+            'datetime:datetime',
             'image:file:model',
             'excerpt',
             'body',

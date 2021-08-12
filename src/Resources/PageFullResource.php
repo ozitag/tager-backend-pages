@@ -173,6 +173,7 @@ class PageFullResource extends JsonResource
             'image' => $model->image ? $model->image->getFullJson() : null,
             'excerpt' => $model->excerpt,
             'body' => $model->body,
+            'datetime' => $model->datetime,
             'seoParams' => $this->getSeoParams(),
             'template' => $model->template,
             'templateFields' => $this->getTemplateValuesJson(),

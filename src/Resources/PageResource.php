@@ -17,6 +17,7 @@ class PageResource extends JsonResource
             'title' => $model->title,
             'path' => $model->url_path,
             'template' => $model->template,
+            'datetime' => $model->datetime,
         ];
     }
 }
