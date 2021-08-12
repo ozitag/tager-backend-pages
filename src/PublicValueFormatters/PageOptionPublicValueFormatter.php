@@ -6,7 +6,7 @@ use OZiTAG\Tager\Backend\Fields\Contracts\IPublicValueFormatter;
 use OZiTAG\Tager\Backend\Pages\Models\TagerPage;
 use OZiTAG\Tager\Backend\Pages\Repositories\PagesRepository;
 
-class PagesOptionPublicValueFormatter implements IPublicValueFormatter
+class PageOptionPublicValueFormatter implements IPublicValueFormatter
 {
     protected PagesRepository $pagesRepository;
 
