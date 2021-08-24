@@ -64,14 +64,19 @@ class PagesRepository extends EloquentRepository implements IRepositoryCrudTreeR
     {
         switch ($key) {
             case 'template':
-                return $builder->whereIn('template', explode(',', $value));
+                return $builder->whereIn('tager_pages.template', explode(',', $value));
             case 'with-children':
                 if ($value == 0) {
                     return $builder;
                 }
-                return $builder->groupBy('tager_pages.id')->select('tager_pages.*')
+
+                $columns = array_map(function ($column) {
+                    return 'tager_pages.' . $column;
+                }, DB::getSchemaBuilder()->getColumnListing('tager_pages'));
+
+                return $builder->groupBy($columns)->select('tager_pages.*')
                     ->whereNull('tp2.deleted_at')
-                    ->join('tager_pages as tp2', 'tager_pages.id','=','tp2.parent_id');
+                    ->join('tager_pages as tp2', 'tager_pages.id', '=', 'tp2.parent_id');
             case 'parent':
                 $allChildrenIds = [];
                 $childrenIds = explode(',', $value);
