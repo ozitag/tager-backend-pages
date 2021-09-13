@@ -5,6 +5,7 @@ namespace OZiTAG\Tager\Backend\Pages\Controllers;
 use Illuminate\Http\Request;
 use OZiTAG\Tager\Backend\Core\Controllers\Controller;
 use OZiTAG\Tager\Backend\Core\Repositories\EloquentRepository;
+use OZiTAG\Tager\Backend\Crud\Actions\IndexAction;
 use OZiTAG\Tager\Backend\Crud\Controllers\PublicCrudController;
 use OZiTAG\Tager\Backend\Pages\Features\Guest\ListPagesFeature;
 use OZiTAG\Tager\Backend\Pages\Features\Guest\ViewByIdPageFeature;
@@ -18,6 +19,8 @@ class PublicController extends PublicCrudController
     public function __construct(PagesRepository $repository, ?string $getModelJobClass = null)
     {
         parent::__construct($repository);
+
+        $this->setIndexAction((new IndexAction())->disablePagination());
 
         $this->setResourceClasses(PageResource::class, PageFullResource::class);
     }
