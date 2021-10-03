@@ -3,6 +3,7 @@
 namespace OZiTAG\Tager\Backend\Pages\Operations;
 
 use OZiTAG\Tager\Backend\Core\Jobs\Operation;
+use OZiTAG\Tager\Backend\HttpCache\HttpCache;
 use OZiTAG\Tager\Backend\Pages\Jobs\Clone\BasicClonePageJob;
 use OZiTAG\Tager\Backend\Pages\Jobs\Clone\CloneTemplateFieldsJob;
 use OZiTAG\Tager\Backend\Pages\Jobs\Clone\GetNewPageUrlJob;
@@ -17,7 +18,7 @@ class ClonePageOperation extends Operation
         $this->page = $page;
     }
 
-    public function handle()
+    public function handle(HttpCache $httpCache)
     {
         $newUrl = $this->run(GetNewPageUrlJob::class, [
             'currentUrl' => $this->page->url_path
@@ -32,6 +33,8 @@ class ClonePageOperation extends Operation
             'oldPage' => $this->page,
             'newPage' => $newPage
         ]);
+
+        $httpCache->clear('tager/pages');
 
         return $newPage;
     }

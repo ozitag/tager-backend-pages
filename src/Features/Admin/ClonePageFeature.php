@@ -5,6 +5,7 @@ namespace OZiTAG\Tager\Backend\Pages\Features\Admin;
 use Illuminate\Http\Resources\Json\JsonResource;
 use OZiTAG\Tager\Backend\Core\Features\Feature;
 use OZiTAG\Tager\Backend\Core\Resources\FailureResource;
+use OZiTAG\Tager\Backend\HttpCache\HttpCache;
 use OZiTAG\Tager\Backend\Pages\Models\TagerPage;
 use OZiTAG\Tager\Backend\Pages\Operations\ClonePageOperation;
 use OZiTAG\Tager\Backend\Pages\Repositories\PagesRepository;
@@ -34,7 +35,7 @@ class ClonePageFeature extends Feature
         if (!$newPage) {
             return new FailureResource('Error clone page');
         }
-
+        
         return new AdminPageFullResource($newPage);
     }
 }

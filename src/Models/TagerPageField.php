@@ -6,6 +6,13 @@ use App\Models\Product;
 use Illuminate\Database\Eloquent\Model;
 use Ozerich\FileStorage\Models\File;
 
+/**
+ *
+ * @property int $parent_id
+ * @property int $page_id
+ * @property string $field
+ * @property string $value
+ */
 class TagerPageField extends Model
 {
     public $timestamps = false;
