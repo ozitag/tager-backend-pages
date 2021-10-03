@@ -8,12 +8,15 @@ use OZiTAG\Tager\Backend\Crud\Actions\StoreOrUpdateAction;
 use OZiTAG\Tager\Backend\Crud\Controllers\AdminCrudController;
 use OZiTAG\Tager\Backend\Pages\Events\PageDeletedEvent;
 use OZiTAG\Tager\Backend\Pages\Events\PageUpdatedEvent;
+use OZiTAG\Tager\Backend\Pages\Features\Admin\ClonePageFeature;
 use OZiTAG\Tager\Backend\Pages\Jobs\CheckIfCanDeletePageJob;
 use OZiTAG\Tager\Backend\Pages\Operations\CreatePageOperation;
 use OZiTAG\Tager\Backend\Pages\Operations\UpdatePageOperation;
 use OZiTAG\Tager\Backend\Pages\Repositories\PagesRepository;
 use OZiTAG\Tager\Backend\Pages\Requests\CreatePageRequest;
 use OZiTAG\Tager\Backend\Pages\Requests\UpdatePageRequest;
+use OZiTAG\Tager\Backend\Pages\Resources\AdminPageFullResource;
+use OZiTAG\Tager\Backend\Pages\Resources\AdminPageResource;
 
 class AdminPagesController extends AdminCrudController
 {
@@ -43,35 +46,13 @@ class AdminPagesController extends AdminCrudController
 
         $this->setDeleteAction(new DeleteAction(CheckIfCanDeletePageJob::class, PageDeletedEvent::class));
 
-        $fields = [
-            'id',
-            'depth',
-            'title',
-            'templateName',
-            'path' => 'url_path',
-            'parent' => [
-                'relation' => 'parent',
-                'as' => [
-                    'id', 'title'
-                ]
-            ],
-        ];
-
-        $this->setResourceFields($fields);
-
-        $this->setFullResourceFields(array_merge($fields, [
-            'template',
-            'datetime:datetime',
-            'image:file:model',
-            'excerpt',
-            'body',
-            'pageTitle' => 'page_title',
-            'pageDescription' => 'page_description',
-            'pageKeywords' => 'page_keywords',
-            'openGraphImage:file:model',
-            'templateValues' => 'templateValuesJson'
-        ]));
+        $this->setResourceClasses(AdminPageResource::class, AdminPageFullResource::class);
 
         $this->setCacheNamespace('tager/pages');
+    }
+
+    public function clone($id)
+    {
+        return $this->serve(ClonePageFeature::class, ['id' => $id]);
     }
 }
