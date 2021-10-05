@@ -44,7 +44,7 @@ class UrlPathRule implements Rule
         if ($this->id === null) {
             return $existedPage === null;
         } else {
-            return $existedPage === null || $existedPage->id = $this->id;
+            return $existedPage === null || $existedPage->id == $this->id;
         }
     }
 
