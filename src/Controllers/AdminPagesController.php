@@ -2,6 +2,7 @@
 
 namespace OZiTAG\Tager\Backend\Pages\Controllers;
 
+use OZiTAG\Tager\Backend\Crud\Actions\CloneAction;
 use OZiTAG\Tager\Backend\Crud\Actions\DeleteAction;
 use OZiTAG\Tager\Backend\Crud\Actions\IndexAction;
 use OZiTAG\Tager\Backend\Crud\Actions\StoreOrUpdateAction;
@@ -10,6 +11,7 @@ use OZiTAG\Tager\Backend\Pages\Events\PageDeletedEvent;
 use OZiTAG\Tager\Backend\Pages\Events\PageUpdatedEvent;
 use OZiTAG\Tager\Backend\Pages\Features\Admin\ClonePageFeature;
 use OZiTAG\Tager\Backend\Pages\Jobs\CheckIfCanDeletePageJob;
+use OZiTAG\Tager\Backend\Pages\Operations\ClonePageOperation;
 use OZiTAG\Tager\Backend\Pages\Operations\CreatePageOperation;
 use OZiTAG\Tager\Backend\Pages\Operations\UpdatePageOperation;
 use OZiTAG\Tager\Backend\Pages\Repositories\PagesRepository;
@@ -46,13 +48,10 @@ class AdminPagesController extends AdminCrudController
 
         $this->setDeleteAction(new DeleteAction(CheckIfCanDeletePageJob::class, PageDeletedEvent::class));
 
+        $this->setCloneAction(new CloneAction(ClonePageOperation::class));
+
         $this->setResourceClasses(AdminPageResource::class, AdminPageFullResource::class);
 
         $this->setCacheNamespace('tager/pages');
-    }
-
-    public function clone($id)
-    {
-        return $this->serve(ClonePageFeature::class, ['id' => $id]);
     }
 }
