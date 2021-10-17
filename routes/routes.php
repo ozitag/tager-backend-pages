@@ -30,12 +30,12 @@ Route::group(['prefix' => 'admin/pages', 'middleware' => ['passport:administrato
 
         Route::group(['middleware' => [AccessControlMiddleware::scopes(PageScope::Create)]], function () {
             Route::post('/', [AdminPagesController::class, 'store']);
+            Route::post('/{id}/clone', [AdminPagesController::class, 'clone']);
         });
 
         Route::group(['middleware' => [AccessControlMiddleware::scopes(PageScope::Edit)]], function () {
             Route::put('/{id}', [AdminPagesController::class, 'update']);
             Route::post('/{id}/move/{direction}', [AdminPagesController::class, 'move'])->where('direction', 'up|down');
-            Route::post('/{id}/clone', [AdminPagesController::class, 'clone']);
         });
 
         Route::group(['middleware' => [AccessControlMiddleware::scopes(PageScope::Delete)]], function () {
