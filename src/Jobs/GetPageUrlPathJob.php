@@ -21,7 +21,7 @@ class GetPageUrlPathJob extends Job
     public function handle(PagesRepository $pagesRepository)
     {
         $parent = $this->parentId ? $pagesRepository->find($this->parentId) : null;
-        $basePath = $parent ? $parent->url_path : '';
+        $basePath = $parent ? strtolower($parent->url_path) : '';
 
         $baseAlias = Translit::translit($this->title);
 

@@ -28,6 +28,7 @@ class PagesRepository extends EloquentRepository implements IRepositoryCrudTreeR
             $urlPath = '/' . $urlPath;
         }
 
+        $urlPath = strtolower($urlPath);
         return $this->model::query()->whereUrlPath($urlPath)->first();
     }
 

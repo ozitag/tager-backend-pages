@@ -17,7 +17,9 @@ class ViewByPathPageFeature extends Feature
 
     public function handle()
     {
-        $model = $this->run(GetPageByUrlPathJob::class, ['path' => $this->path]);
+        $model = $this->run(GetPageByUrlPathJob::class, [
+            'path' => $this->path
+        ]);
 
         return new PageFullResource($model);
     }

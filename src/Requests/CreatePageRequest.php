@@ -44,6 +44,6 @@ class CreatePageRequest extends CrudFormRequest
             $path = '/';
         }
 
-        return $path;
+        return strtolower($path);
     }
 }
