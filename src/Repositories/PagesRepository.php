@@ -54,7 +54,7 @@ class PagesRepository extends EloquentRepository implements IRepositoryCrudTreeR
 
     public function searchByQuery(?string $query, Builder $builder = null): ?Builder
     {
-        $builder = $builder ? $builder : $this->model;
+        $builder = $builder ? $builder->defaultOrder() : $this->model;
 
         return $builder
             ->orWhere('title', 'LIKE', '%' . $query . '%')
@@ -63,6 +63,8 @@ class PagesRepository extends EloquentRepository implements IRepositoryCrudTreeR
 
     public function filterByKey(Builder $builder, string $key, mixed $value): Builder
     {
+        $builder = $builder->defaultOrder();
+
         switch ($key) {
             case 'template':
                 return $builder->whereIn('tager_pages.template', explode(',', $value));
@@ -97,6 +99,6 @@ class PagesRepository extends EloquentRepository implements IRepositoryCrudTreeR
 
     public function findByTemplate(string $template): Builder
     {
-        return $this->model::query()->where('template', '=', $template);
+        return $this->model::query()->defaultOrder()->where('tager_pages.template', '=', $template);
     }
 }

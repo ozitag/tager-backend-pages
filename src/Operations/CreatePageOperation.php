@@ -30,10 +30,16 @@ class CreatePageOperation extends Operation
         /** @var TagerPage $model */
         $model = $repository->createModelInstance();
         $model->title = $this->request->title;
-        $model->parent_id = $this->request->parent;
         $model->url_path = $this->request->getPath();
         $model->datetime = Carbon::now();
         $model->save();
+
+        if ($this->request->parent) {
+            $parent = $repository->find($this->request->parent);
+            if ($parent) {
+                $parent->prependNode($model);
+            }
+        }
 
         return $this->run(SetPageTemplateJob::class, [
             'model' => $model,
