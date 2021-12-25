@@ -15,29 +15,29 @@ Route::group(['middleware' => 'api.cache'], function () {
 });
 
 Route::group(['prefix' => 'admin/pages', 'middleware' => ['passport:administrators', 'auth:api']], function () {
-    Route::group(['middleware' => [AccessControlMiddleware::scopes(PageScope::View)]], function () {
+    Route::group(['middleware' => [AccessControlMiddleware::scopes(PageScope::View->value)]], function () {
         Route::get('/info', [AdminController::class, 'moduleInfo']);
         Route::get('/count', [AdminPagesController::class, 'count']);
         Route::get('/', [AdminPagesController::class, 'index']);
 
 
-        Route::group(['middleware' => [AccessControlMiddleware::scopes(PageScope::View)]], function () {
+        Route::group(['middleware' => [AccessControlMiddleware::scopes(PageScope::View->value)]], function () {
             Route::get('/templates', [AdminTemplatesController::class, 'index']);
             Route::get('/templates/{alias}', [AdminTemplatesController::class, 'view']);
             Route::get('/{id}', [AdminPagesController::class, 'view']);
         });
 
-        Route::group(['middleware' => [AccessControlMiddleware::scopes(PageScope::Create)]], function () {
+        Route::group(['middleware' => [AccessControlMiddleware::scopes(PageScope::Create->value)]], function () {
             Route::post('/', [AdminPagesController::class, 'store']);
             Route::post('/{id}/clone', [AdminPagesController::class, 'clone']);
         });
 
-        Route::group(['middleware' => [AccessControlMiddleware::scopes(PageScope::Edit)]], function () {
+        Route::group(['middleware' => [AccessControlMiddleware::scopes(PageScope::Edit->value)]], function () {
             Route::put('/{id}', [AdminPagesController::class, 'update']);
             Route::post('/{id}/move/{direction}', [AdminPagesController::class, 'move'])->where('direction', 'up|down');
         });
 
-        Route::group(['middleware' => [AccessControlMiddleware::scopes(PageScope::Delete)]], function () {
+        Route::group(['middleware' => [AccessControlMiddleware::scopes(PageScope::Delete->value)]], function () {
             Route::delete('/{id}', [AdminPagesController::class, 'delete']);
         });
     });
