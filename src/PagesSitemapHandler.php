@@ -20,7 +20,7 @@ class PagesSitemapHandler implements ISitemapHandler
     public function handle()
     {
         /** @var TagerPage[] $pages */
-        $pages = $this->pagesRepository->all();
+        $pages = $this->pagesRepository->findPublished()->get();
 
         $result = [];
         foreach ($pages as $page) {
