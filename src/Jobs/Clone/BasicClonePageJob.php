@@ -23,8 +23,9 @@ class BasicClonePageJob extends Job
     {
         $newPage = new TagerPage();
 
-        $newPage->title = $this->page->title.' (Copy)';
+        $newPage->title = $this->page->title . ' (Copy)';
         $newPage->template = $this->page->template;
+        $newPage->status = $this->page->status;
         $newPage->parent_id = $this->page->parent_id;
         $newPage->url_path = $this->urlPath;
         $newPage->excerpt = $this->page->excerpt;

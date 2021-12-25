@@ -28,7 +28,7 @@ class TagerPagesTemplates
                 $model = new $template;
             }
 
-            if(!$model instanceof Template){
+            if (!$model instanceof Template) {
                 continue;
             }
 

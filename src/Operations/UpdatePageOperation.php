@@ -34,6 +34,7 @@ class UpdatePageOperation extends Operation
 
         $page = $this->run(UpdatePageJob::class, [
             'model' => $this->model,
+            'status' => $request->status,
             'urlPath' => $request->getPath(),
             'parentId' => $request->parent,
             'title' => $request->title,

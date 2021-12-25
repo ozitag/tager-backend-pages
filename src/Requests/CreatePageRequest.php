@@ -12,6 +12,7 @@ use OZiTAG\Tager\Backend\Pages\Rules\UrlPathRule;
  * @package OZiTAG\Tager\Backend\Pages\Requests
  *
  * @property string $title
+ * @property string $status
  * @property string $path
  * @property string $template
  * @property integer $parent
@@ -22,6 +23,7 @@ class CreatePageRequest extends CrudFormRequest
     {
         return [
             'title' => 'required|string',
+            'status' => 'required|string',
             'path' => ['required', 'string', new UrlPathRule($this->route('id'))],
             'template' => ['nullable', 'string', new TemplateRule()],
             'parent' => ['nullable', 'integer', 'exists:tager_pages,id,id,!0,deleted_at,NULL']

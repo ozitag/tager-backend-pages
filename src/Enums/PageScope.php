@@ -2,12 +2,10 @@
 
 namespace OZiTAG\Tager\Backend\Pages\Enums;
 
-use OZiTAG\Tager\Backend\Core\Enums\Enum;
-
-final class PageScope extends Enum
+enum PageScope: string
 {
-    const View = 'pages.view';
-    const Create = 'pages.create';
-    const Edit = 'pages.edit';
-    const Delete = 'pages.delete';
+    case View = 'pages.view';
+    case Create = 'pages.create';
+    case Edit = 'pages.edit';
+    case Delete = 'pages.delete';
 }

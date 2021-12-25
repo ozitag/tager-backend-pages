@@ -2,14 +2,12 @@
 
 namespace OZiTAG\Tager\Backend\Pages\Models;
 
-use App\Web\Shops\Helpers\ShopUrlHelper;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Kalnoy\Nestedset\NodeTrait;
 use Ozerich\FileStorage\Models\File;
 use OZiTAG\Tager\Backend\Core\Models\Contracts\IPublicWebModel;
 use OZiTAG\Tager\Backend\Core\Models\TModel;
-use OZiTAG\Tager\Backend\Fields\Base\Field;
 use OZiTAG\Tager\Backend\Fields\Fields\GroupField;
 use OZiTAG\Tager\Backend\Fields\Fields\RepeaterField;
 use OZiTAG\Tager\Backend\Fields\Types\GalleryType;
@@ -22,6 +20,7 @@ use OZiTAG\Tager\Backend\Seo\TagerSeo;
  * @package OZiTAG\Tager\Backend\Pages\Models
  *
  * @property int $id
+ * @property string $status
  * @property int $parent_id
  * @property string $url_path
  * @property string $template
@@ -51,18 +50,9 @@ class TagerPage extends TModel implements IPublicWebModel
     protected $table = 'tager_pages';
 
     protected $fillable = [
-        'parent_id',
-        'template',
-        'url_path',
-        'image_id',
-        'title',
-        'excerpt',
-        'body',
-        'datetime',
-        'page_title',
-        'page_description',
-        'page_keywords',
-        'open_graph_image_id'
+        'parent_id', 'status', 'template', 'url_path', 'image_id',
+        'title', 'excerpt', 'body', 'datetime',
+        'page_title', 'page_description', 'page_keywords', 'open_graph_image_id'
     ];
 
     public function parent()

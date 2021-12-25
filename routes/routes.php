@@ -15,7 +15,6 @@ Route::group(['middleware' => 'api.cache'], function () {
 });
 
 Route::group(['prefix' => 'admin/pages', 'middleware' => ['passport:administrators', 'auth:api']], function () {
-
     Route::group(['middleware' => [AccessControlMiddleware::scopes(PageScope::View)]], function () {
         Route::get('/info', [AdminController::class, 'moduleInfo']);
         Route::get('/count', [AdminPagesController::class, 'count']);

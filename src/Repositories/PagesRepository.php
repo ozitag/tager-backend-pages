@@ -8,6 +8,7 @@ use OZiTAG\Tager\Backend\Core\Repositories\EloquentRepository;
 use OZiTAG\Tager\Backend\Core\Repositories\IFilterable;
 use OZiTAG\Tager\Backend\Core\Repositories\ISearchable;
 use OZiTAG\Tager\Backend\Crud\Contracts\IRepositoryCrudTreeRepository;
+use OZiTAG\Tager\Backend\Pages\Enums\PageStatus;
 use OZiTAG\Tager\Backend\Pages\Models\TagerPage;
 
 class PagesRepository extends EloquentRepository implements IRepositoryCrudTreeRepository, ISearchable, IFilterable
@@ -17,7 +18,7 @@ class PagesRepository extends EloquentRepository implements IRepositoryCrudTreeR
         parent::__construct($model);
     }
 
-    public function findByUrlPath($urlPath): ?TagerPage
+    public function queryByUrlPath(string $urlPath): Builder
     {
         $urlPath = preg_replace('#\/+$#si', '', $urlPath);
         if (empty($urlPath)) {
@@ -29,7 +30,25 @@ class PagesRepository extends EloquentRepository implements IRepositoryCrudTreeR
         }
 
         $urlPath = strtolower($urlPath);
-        return $this->model::query()->whereUrlPath($urlPath)->first();
+
+        return $this->model::query()->whereUrlPath($urlPath);
+    }
+
+    public function findPublished()
+    {
+        return $this->builder()->where('status', PageStatus::Published->value);
+    }
+
+    public function findPublishedByUrlPath(string $urlPath): ?TagerPage
+    {
+        return $this->queryByUrlPath($urlPath)
+            ->where('status', PageStatus::Published->value)
+            ->first();
+    }
+
+    public function findByUrlPath($urlPath): ?TagerPage
+    {
+        return $this->queryByUrlPath($urlPath)->first();
     }
 
     public function search($searchQuery, $offset = 0, $limit = null)
@@ -68,6 +87,8 @@ class PagesRepository extends EloquentRepository implements IRepositoryCrudTreeR
         switch ($key) {
             case 'template':
                 return $builder->whereIn('tager_pages.template', explode(',', $value));
+            case 'status':
+                return $builder->whereIn('tager_pages.status', explode(',', $value));
             case 'with-children':
                 if ($value == 0) {
                     return $builder;

@@ -8,9 +8,9 @@ use OZiTAG\Tager\Backend\Pages\Resources\PageFullResource;
 
 class ViewByPathPageFeature extends Feature
 {
-    private $path;
+    private string $path;
 
-    public function __construct($path)
+    public function __construct(string $path)
     {
         $this->path = $path;
     }

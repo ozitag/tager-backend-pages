@@ -10,17 +10,20 @@ use OZiTAG\Tager\Backend\Crud\Controllers\PublicCrudController;
 use OZiTAG\Tager\Backend\Pages\Features\Guest\ListPagesFeature;
 use OZiTAG\Tager\Backend\Pages\Features\Guest\ViewByIdPageFeature;
 use OZiTAG\Tager\Backend\Pages\Features\Guest\ViewByPathPageFeature;
+use OZiTAG\Tager\Backend\Pages\Jobs\GetPublishedPostsBuilderJob;
 use OZiTAG\Tager\Backend\Pages\Repositories\PagesRepository;
 use OZiTAG\Tager\Backend\Pages\Resources\PageFullResource;
 use OZiTAG\Tager\Backend\Pages\Resources\PageResource;
 
 class PublicController extends PublicCrudController
 {
-    public function __construct(PagesRepository $repository, ?string $getModelJobClass = null)
+    public function __construct(PagesRepository $repository)
     {
         parent::__construct($repository);
 
-        $this->setIndexAction((new IndexAction())->disablePagination());
+        $this->setIndexAction(
+            (new IndexAction(GetPublishedPostsBuilderJob::class))->disablePagination()
+        );
 
         $this->setResourceClasses(PageResource::class, PageFullResource::class);
     }

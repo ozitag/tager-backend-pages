@@ -29,6 +29,7 @@ class CreatePageOperation extends Operation
     {
         /** @var TagerPage $model */
         $model = $repository->createModelInstance();
+        $model->status = $this->request->status;
         $model->title = $this->request->title;
         $model->url_path = $this->request->getPath();
         $model->datetime = Carbon::now();

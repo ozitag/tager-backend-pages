@@ -10,6 +10,7 @@ class AdminPageResource extends ModelResource
     {
         return [
             'id',
+            'status',
             'depth',
             'title',
             'templateName',

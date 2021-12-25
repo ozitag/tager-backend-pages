@@ -19,13 +19,16 @@ class UpdatePageJob extends Job
 
     private $datetime;
 
-    public function __construct(TagerPage $model, $title, $parentId, $urlPath, $datetime)
+    private $status;
+
+    public function __construct(TagerPage $model, $title, $parentId, $urlPath, $datetime, $status)
     {
         $this->model = $model;
         $this->title = $title;
         $this->parentId = $parentId;
         $this->urlPath = $urlPath;
         $this->datetime = $datetime;
+        $this->status = $status;
     }
 
     public function handle(PagesRepository $repository)
@@ -47,6 +50,7 @@ class UpdatePageJob extends Job
         }
 
         $this->model->title = $this->title;
+        $this->model->status = $this->status;
         $this->model->parent_id = $parentPage ? $parentPage->id : null;
         $this->model->url_path = $this->urlPath;
         $this->model->datetime = $this->datetime;

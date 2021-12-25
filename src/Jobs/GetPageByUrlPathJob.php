@@ -16,7 +16,7 @@ class GetPageByUrlPathJob extends Job
 
     public function handle(PagesRepository $repository)
     {
-        $model = $repository->findByUrlPath($this->path);
+        $model = $repository->findPublishedByUrlPath($this->path);
 
         if (!$model) {
             abort(404, __('tager-pages::errors.page_not_found'));
