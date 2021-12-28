@@ -11,7 +11,7 @@ class PageOptionsGenerator implements ISelectOptionsGenerator
 
     protected ?string $template;
 
-    public function __construct(?string $template = null, PagesRepository $pagesRepository)
+    public function __construct(PagesRepository $pagesRepository, ?string $template = null)
     {
         $this->template = $template;
 
