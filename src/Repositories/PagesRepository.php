@@ -73,16 +73,22 @@ class PagesRepository extends EloquentRepository implements IRepositoryCrudTreeR
 
     public function searchByQuery(?string $query, Builder $builder = null): ?Builder
     {
+        if (empty($query)) {
+            return $builder;
+        }
+
         $builder = $builder ? $builder->defaultOrder() : $this->model;
 
-        return $builder
-            ->orWhere('title', 'LIKE', '%' . $query . '%')
-            ->orWhere('url_path', 'LIKE', '%' . $query . '%');
+        return $builder->where(function ($builder) use ($query) {
+            return $builder
+                ->orWhere('title', 'LIKE', '%' . $query . '%')
+                ->orWhere('url_path', 'LIKE', '%' . $query . '%');
+        });
     }
 
     public function filterByKey(Builder $builder, string $key, mixed $value): Builder
     {
-        $builder = $builder->defaultOrder();
+        $builder = $builder ? $builder->defaultOrder() : $this->model;
 
         switch ($key) {
             case 'template':
