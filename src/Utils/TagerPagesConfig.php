@@ -9,27 +9,33 @@ class TagerPagesConfig
         return \config('tager-pages' . (empty($param) ? '' : '.' . $param), $default);
     }
 
-    private static function getStorageScenario($id)
+    private static function getStorageScenario($id): ?string
     {
-        return self::config('file_storage_scenarios.' . $id);
+        $result = self::config('file_storage_scenarios.' . $id);
+
+        if ($result instanceof \BackedEnum) {
+            return $result->value;
+        } else {
+            return $result;
+        }
     }
 
-    public static function getContentImageScenario()
+    public static function getContentImageScenario(): ?string
     {
         return self::getStorageScenario('content');
     }
 
-    public static function getPageImageScenario()
+    public static function getPageImageScenario(): ?string
     {
         return self::getStorageScenario('cover');
     }
 
-    public static function getOpenGraphScenario()
+    public static function getOpenGraphScenario(): ?string
     {
         return self::getStorageScenario('openGraph');
     }
 
-    public static function getTemplatesConfig()
+    public static function getTemplatesConfig(): array
     {
         return self::config('templates', []);
     }
