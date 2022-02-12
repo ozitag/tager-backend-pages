@@ -13,7 +13,6 @@ use OZiTAG\Tager\Backend\Fields\Types\GalleryType;
 use OZiTAG\Tager\Backend\Pages\Models\TagerPage;
 use OZiTAG\Tager\Backend\Pages\Models\TagerPageField;
 use OZiTAG\Tager\Backend\Pages\Utils\TagerPagesTemplates;
-use OZiTAG\Tager\Backend\Core\Resources\SeoParamsResource;
 
 class PageFullResource extends JsonResource
 {
@@ -138,24 +137,6 @@ class PageFullResource extends JsonResource
         return $this->getValuesByFields($model->templateFields, $template->getFields());
     }
 
-    private function getSeoParams()
-    {
-        /** @var TagerPage $model */
-        $model = $this->resource;
-
-        $seoParams = new SeoParamsResource(
-            $model->getWebPageTitle(),
-            $model->getWebPageDescription(),
-            $model->getWebPageKeywords()
-        );
-
-        $seoParams->setOpenGraphImage(
-            $model->getWebOpenGraphImageUrl()
-        );
-
-        return $seoParams;
-    }
-
     public function toArray($request)
     {
         /** @var TagerPage $model */
@@ -176,9 +157,16 @@ class PageFullResource extends JsonResource
             'excerpt' => $model->excerpt,
             'body' => $model->body,
             'datetime' => $model->datetime,
-            'seoParams' => $this->getSeoParams(),
-            'template' => $model->template,
-            'templateFields' => $this->getTemplateValuesJson(),
+            'template' => $model->template ? [
+                'name' => $model->template,
+                'fields' => $this->getTemplateValuesJson(),
+            ] : null,
+            'seoParams' => [
+                'title' => $model->getWebPageTitle(),
+                'description' => $model->getWebPageDescription(),
+                'keywords' => $model->getWebPageKeywords(),
+                'openGraphImage' => $model->getWebOpenGraphImageUrl(),
+            ]
         ];
     }
 }
