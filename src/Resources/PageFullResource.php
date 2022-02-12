@@ -157,10 +157,8 @@ class PageFullResource extends JsonResource
             'excerpt' => $model->excerpt,
             'body' => $model->body,
             'datetime' => $model->datetime,
-            'template' => $model->template ? [
-                'name' => $model->template,
-                'fields' => $this->getTemplateValuesJson(),
-            ] : null,
+            'template' => $model->template,
+            'templateFields' => $this->getTemplateValuesJson(),
             'seoParams' => [
                 'title' => $model->getWebPageTitle(),
                 'description' => $model->getWebPageDescription(),
