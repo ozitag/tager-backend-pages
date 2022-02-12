@@ -45,7 +45,7 @@ class TagerPage extends TModel implements IPublicWebModel
 
     use SoftDeletes;
 
-    public static $defaultOrder = 'id desc';
+    static string $defaultOrder = 'id desc';
 
     protected $table = 'tager_pages';
 

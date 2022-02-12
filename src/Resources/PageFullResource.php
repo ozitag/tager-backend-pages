@@ -145,10 +145,8 @@ class PageFullResource extends JsonResource
             $model->getWebPageKeywords()
         );
 
-        $seoParams->setOpenGraph(
-            $model->getWebOpenGraphImageUrl(),
-            $model->getWebPageTitle(),
-            $model->getWebPageDescription()
+        $seoParams->setOpenGraphImage(
+            $model->getWebOpenGraphImageUrl()
         );
 
         return $seoParams;
@@ -170,7 +168,7 @@ class PageFullResource extends JsonResource
             'title' => $model->title,
             'path' => $model->url_path,
             'parent' => $parentJson,
-            'image' => $model->image ? $model->image->getFullJson() : null,
+            'image' => $model->image?->getFullJson(),
             'excerpt' => $model->excerpt,
             'body' => $model->body,
             'datetime' => $model->datetime,
