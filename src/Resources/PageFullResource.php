@@ -94,6 +94,10 @@ class PageFullResource extends JsonResource
                 } else {
                     if ($type->isFileType()) {
                         $scenario = $templateField->getMetaParamValue('scenario');
+                        if ($scenario instanceof \BackedEnum) {
+                            $scenario = $scenario->value;
+                        }
+
                         $type->setValue($found->files);
 
                         if ($scenario) {

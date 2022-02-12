@@ -40,6 +40,9 @@ class SetPageSeoParamsJob extends Job
             if ($image) {
                 $scenario = TagerPagesConfig::getOpenGraphScenario();
                 if ($scenario) {
+                    if ($scenario instanceof \BackedEnum) {
+                        $scenario = $scenario->value;
+                    }
                     $fileStorage->setFileScenario($this->openGraphImageId, $scenario);
                 }
                 $this->model->open_graph_image_id = $this->openGraphImageId;

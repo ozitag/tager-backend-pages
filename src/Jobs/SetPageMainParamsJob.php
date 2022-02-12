@@ -36,6 +36,9 @@ class SetPageMainParamsJob extends Job
             $image = $fileRepository->find($this->imageId);
             if ($image) {
                 $scenario = TagerPagesConfig::getPageImageScenario();
+                if ($scenario instanceof \BackedEnum) {
+                    $scenario = $scenario->value;
+                }
                 if ($scenario) {
                     $fileStorage->setFileScenario($this->imageId, $scenario);
                 }
