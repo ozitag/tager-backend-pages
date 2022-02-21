@@ -227,8 +227,7 @@ class TagerPage extends TModel implements IPublicWebModel
 
     public function getWebOpenGraphImageUrl(): ?string
     {
-        return $this->openGraphImage ?
-            $this->openGraphImage->getDefaultThumbnailUrl(TagerPagesConfig::getOpenGraphScenario()) : null;
+        return $this->openGraphImage?->getDefaultThumbnailUrl(TagerPagesConfig::getOpenGraphScenario());
     }
 
 
