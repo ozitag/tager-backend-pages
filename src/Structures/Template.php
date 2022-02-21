@@ -87,9 +87,18 @@ class Template
 
         if (substr($name, 0, 5) == 'group') {
             $groupIndex = intval(substr($name, 5));
-            if ($groupIndex && isset($this->fields[$groupIndex - 1]) && $this->fields[$groupIndex - 1] instanceof GroupField) {
-                return $this->fields[$groupIndex - 1];
+            $groupParts = array_slice(explode('_', $name), 1, 2);
+
+            $fields = $this->fields;
+
+            $result = null;
+
+            for ($i = 0; $i < count($groupParts); $i++) {
+                $result = $fields[$groupParts[$i] - 1];
+                $fields = $fields[$groupParts[$i] - 1]->getFields();
             }
+
+            return $result;
         }
 
         foreach ($this->fields as $field) {
