@@ -85,6 +85,7 @@ class Template
             return $this->fields[$name];
         }
 
+
         if (substr($name, 0, 5) == 'group') {
             $groupIndex = intval(substr($name, 5));
             $groupParts = array_slice(explode('_', $name), 1, 2);
@@ -104,6 +105,14 @@ class Template
         foreach ($this->fields as $field) {
             if ($field instanceof GroupField) {
                 $groupFields = $field->getFields();
+                foreach ($groupFields as $groupField) {
+                    if ($groupField instanceof GroupField) {
+                        $groupInnerFields = $groupField->getFields();
+                        if (isset($groupInnerFields[$name])) {
+                            return $groupInnerFields[$name];
+                        }
+                    }
+                }
                 if (isset($groupFields[$name])) {
                     return $groupFields[$name];
                 }

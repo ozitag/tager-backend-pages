@@ -132,6 +132,7 @@ class SetPageTemplateJob extends Job
                 continue;
             }
 
+
             if ($field instanceof GroupField) {
                 foreach ($fieldItem['value'] as $groupFieldItem) {
                     $groupField = $template->getField($groupFieldItem['name']);
@@ -139,7 +140,19 @@ class SetPageTemplateJob extends Job
                         continue;
                     }
 
-                    $this->saveValue($groupFieldItem['name'], $groupFieldItem['value'] ?? null, $groupField);
+                    if($groupField instanceof GroupField){
+                        foreach($groupFieldItem['value'] as $groupInnerFieldItem){
+                            $groupInnerField = $template->getField($groupInnerFieldItem['name']);
+                            
+                            if (!$groupInnerField) {
+                                continue;
+                            }
+
+                            $this->saveValue($groupInnerFieldItem['name'], $groupInnerFieldItem['value'] ?? null, $groupInnerField);
+                        }
+                    } else {
+                        $this->saveValue($groupFieldItem['name'], $groupFieldItem['value'] ?? null, $groupField);
+                    }
                 }
             } else {
                 $this->saveValue($fieldItem['name'], $fieldItem['value'] ?? null, $field);
