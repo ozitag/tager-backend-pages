@@ -2,7 +2,7 @@
 
 namespace OZiTAG\Tager\Backend\Pages\Jobs;
 
-use Illuminate\Support\Facades\Request;
+use Illuminate\Http\Request;
 use OZiTAG\Tager\Backend\Core\Jobs\Job;
 use OZiTAG\Tager\Backend\Pages\Repositories\PagesRepository;
 
