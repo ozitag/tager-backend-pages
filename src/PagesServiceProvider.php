@@ -45,7 +45,7 @@ class PagesServiceProvider extends ServiceProvider
             __('tager-pages::seo-template.title'), [
             'title' => __('tager-pages::seo-template.field_title'),
             'excerpt' => __('tager-pages::seo-template.field_excerpt')
-        ], false, '{{title}}', '{{excerpt}}'), '/tager/pages');
+        ], false, '{{title}}', '{{excerpt}}', '/tager/pages'));
 
         TagerScopes::registerGroup(__('tager-pages::scopes.group'), [
             PageScope::View->value => __('tager-pages::scopes.view_pages'),
