@@ -58,15 +58,7 @@ class PageFullResource extends JsonResource
                 continue;
             }
 
-            if ($templateField instanceof RepeaterField) {
-                $repeaterValue = [];
-
-                foreach ($found->children as $child) {
-                    $repeaterValue[] = $this->getValuesByFields($child->children, $templateField->getFields());
-                }
-
-                $result[$field] = $repeaterValue;
-            } else if ($templateField instanceof GroupField) {
+            if ($templateField instanceof GroupField) {
                 $groupValue = $this->getValuesByFields($modelFields, $templateField->getFields());
                 if ($groupValue) {
                     $result = array_merge($result, $groupValue);
