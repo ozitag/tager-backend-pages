@@ -104,9 +104,16 @@ class PagesRepository extends EloquentRepository implements IRepositoryCrudTreeR
                     return 'tager_pages.' . $column;
                 }, DB::getSchemaBuilder()->getColumnListing('tager_pages'));
 
-                return $builder->groupBy($columns)->select('tager_pages.*')
+                $builder = $builder->groupBy($columns)->select('tager_pages.*')
                     ->whereNull('tp2.deleted_at')
                     ->join('tager_pages as tp2', 'tager_pages.id', '=', 'tp2.parent_id');
+
+                $builder->reorder(
+                    'tager_pages._lft',
+                    'ASC'
+                )->orderBy('tager_pages.id', 'asc');
+
+                return $builder;
             case 'parent':
                 $allChildrenIds = [];
                 $childrenIds = explode(',', $value);
