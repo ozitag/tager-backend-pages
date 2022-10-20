@@ -86,7 +86,7 @@ class TagerPage extends TModel implements IPublicWebModel
         });
     }
 
-    private function getValuesByFields(Collection $modelFields, array $templateFields, ?string $groupPrefix = null): array
+    private function getValuesByFields(Collection $modelFields, array $templateFields, ?string $groupPrefix = null, ?int $parentId = null): array
     {
         $result = [];
 
@@ -100,7 +100,7 @@ class TagerPage extends TModel implements IPublicWebModel
 
             $found = null;
             foreach ($modelFields as $modelField) {
-                if ($modelField->field == $field) {
+                if ($modelField->field == $field && $modelField->parent_id == $parentId) {
                     $found = $modelField;
                     break;
                 }
@@ -122,7 +122,7 @@ class TagerPage extends TModel implements IPublicWebModel
                 $repeaterValue = [];
 
                 foreach ($found->children as $child) {
-                    $repeaterValue[] = $this->getValuesByFields($child->children, $templateField->getFields());
+                    $repeaterValue[] = $this->getValuesByFields($child->children, $templateField->getFields(), null, $child->id);
                 }
 
                 $result[] = [
@@ -132,7 +132,11 @@ class TagerPage extends TModel implements IPublicWebModel
             } else if ($isGroup) {
                 $result[] = [
                     'name' => 'group_' . ($groupPrefix ? $groupPrefix . '_' : '') . ((int)$field + 1),
-                    'value' => $this->getValuesByFields($modelFields, $templateField->getFields(), ($groupPrefix ? $groupPrefix . '_' : '') . ($field + 1))
+                    'value' => $this->getValuesByFields(
+                        $modelFields,
+                        $templateField->getFields(),
+                        ($groupPrefix ? $groupPrefix . '_' : '') . ($field + 1)
+                    )
                 ];
             } else {
 
