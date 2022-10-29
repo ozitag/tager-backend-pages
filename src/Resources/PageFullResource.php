@@ -32,22 +32,18 @@ class PageFullResource extends JsonResource
     /**
      * @param TagerPageField[] $modelFields
      * @param Field[] $templateFields
+     * @param int|null $parent
      * @return array
      */
-    private function getValuesByFields($modelFields, $templateFields)
+    private function getValuesByFields($modelFields, $templateFields, ?int $parent = null)
     {
         $result = [];
-
-        $modelFieldsMap = [];
-        foreach ($modelFields as $modelField) {
-            $modelFieldsMap[$modelField->field_id] = $modelField;
-        }
 
         foreach ($templateFields as $field => $templateField) {
 
             $found = null;
             foreach ($modelFields as $modelField) {
-                if ($modelField->field == $field) {
+                if ($modelField->field == $field && $modelField->parent_id == $parent) {
                     $found = $modelField;
                     break;
                 }
@@ -126,7 +122,7 @@ class PageFullResource extends JsonResource
             return null;
         }
 
-        return $this->getValuesByFields($model->templateFields, $template->getFields());
+        return $this->getValuesByFields($model->templateFields, $template->getFields(), null);
     }
 
     public function toArray($request)
