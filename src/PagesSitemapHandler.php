@@ -24,6 +24,8 @@ class PagesSitemapHandler implements ISitemapHandler
 
         $result = [];
         foreach ($pages as $page) {
+            if ($page->hidden_from_seo_indexation) continue;
+
             $result[] = new SitemapItem($page->getWebPageUrl(), new Carbon($page->updated_at));
         }
 

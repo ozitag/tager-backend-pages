@@ -57,7 +57,8 @@ class UpdatePageOperation extends Operation
             'title' => $request->pageTitle,
             'description' => $request->pageDescription,
             'keywords' => $request->pageKeywords,
-            'openGraphImageId' => Storage::fromUUIDtoId($request->openGraphImage)
+            'openGraphImageId' => Storage::fromUUIDtoId($request->openGraphImage),
+            'hiddenFromSeoIndexation' => $request->hiddenFromSeoIndexation,
         ]);
 
         $page = $this->run(SetPageTemplateJob::class, [

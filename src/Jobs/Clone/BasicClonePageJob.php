@@ -34,6 +34,7 @@ class BasicClonePageJob extends Job
         $newPage->page_title = $this->page->page_title;
         $newPage->page_description = $this->page->page_description;
         $newPage->page_keywords = $this->page->page_keywords;
+        $newPage->hidden_from_seo_indexation = $this->page->hidden_from_seo_indexation;
 
         if ($this->page->image_id) {
             $newPage->image_id = $storage->clone($this->page->image_id);

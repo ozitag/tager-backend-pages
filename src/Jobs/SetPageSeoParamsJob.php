@@ -10,23 +10,16 @@ use OZiTAG\Tager\Backend\Pages\Utils\TagerPagesConfig;
 
 class SetPageSeoParamsJob extends Job
 {
-    private TagerPage $model;
 
-    private ?string $title;
-
-    private ?string $description;
-
-    private ?string $keywords;
-
-    private ?int $openGraphImageId;
-
-    public function __construct(TagerPage $model, ?string $title = null, ?string $description = null, ?string $keywords = null, $openGraphImageId = null)
+    public function __construct(protected TagerPage $model,
+                                protected ?string   $title = null,
+                                protected ?string   $description = null,
+                                protected ?string   $keywords = null,
+                                protected           $openGraphImageId = null,
+                                protected           $hiddenFromSeoIndexation = false,
+    )
     {
-        $this->model = $model;
-        $this->title = $title;
-        $this->description = $description;
-        $this->keywords = $keywords;
-        $this->openGraphImageId = $openGraphImageId;
+
     }
 
     public function handle(FileRepository $fileRepository, Storage $fileStorage)
@@ -34,6 +27,7 @@ class SetPageSeoParamsJob extends Job
         $this->model->page_title = $this->title;
         $this->model->page_description = $this->description;
         $this->model->page_keywords = $this->keywords;
+        $this->model->hidden_from_seo_indexation = $this->hiddenFromSeoIndexation;
 
         if ($this->openGraphImageId) {
             $image = $fileRepository->find($this->openGraphImageId);

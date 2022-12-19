@@ -24,6 +24,7 @@ class UpdatePageRequest extends CreatePageRequest
             'pageDescription' => 'nullable|string',
             'pageKeywords' => 'nullable|string',
             'openGraphImage' => ['nullable', new FileRule()],
+            'hiddenFromSeoIndexation' => ['required', 'boolean'],
             'templateValues' => 'nullable|array',
             'templateValues.*.field' => 'required|string',
             'templateValues.*.value' => 'nullable',

@@ -33,6 +33,7 @@ use OZiTAG\Tager\Backend\Seo\TagerSeo;
  * @property string $page_description
  * @property string $page_keywords
  * @property string $open_graph_image_id
+ * @property boolean $hidden_from_seo_indexation
  *
  * @property TagerPage $parent
  * @property File $image
@@ -52,7 +53,7 @@ class TagerPage extends TModel implements IPublicWebModel
     protected $fillable = [
         'parent_id', 'status', 'template', 'url_path', 'image_id',
         'title', 'excerpt', 'body', 'datetime',
-        'page_title', 'page_description', 'page_keywords', 'open_graph_image_id'
+        'page_title', 'page_description', 'page_keywords', 'open_graph_image_id', 'hidden_from_seo_indexation'
     ];
 
     public function parent()

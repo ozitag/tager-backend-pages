@@ -16,6 +16,7 @@ class AdminPageFullResource extends AdminPageResource
             'pageDescription' => 'page_description',
             'pageKeywords' => 'page_keywords',
             'openGraphImage:file:model',
+            'hiddenFromSeoIndexation' => 'hidden_from_seo_indexation:boolean',
             'templateValues' => 'templateValuesJson'
         ]);
     }

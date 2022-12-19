@@ -152,6 +152,7 @@ class PageFullResource extends JsonResource
                 'description' => $model->getWebPageDescription(),
                 'keywords' => $model->getWebPageKeywords(),
                 'openGraphImage' => $model->getWebOpenGraphImageUrl(),
+                'hiddenFromSeoIndexation' => boolval($model->hidden_from_seo_indexation)
             ]
         ];
     }
