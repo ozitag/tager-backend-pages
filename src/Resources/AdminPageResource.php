@@ -22,6 +22,9 @@ class AdminPageResource extends ModelResource
                     'id', 'title'
                 ]
             ],
+            'sitemapPriority' => 'sitemap_priority',
+            'sitemapFrequency' => 'sitemap_frequency',
+            'hiddenFromSeoIndexation' => 'hidden_from_seo_indexation:boolean',
         ];
     }
 }
