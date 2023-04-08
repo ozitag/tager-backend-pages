@@ -5,6 +5,23 @@ namespace OZiTAG\Tager\Backend\Pages\Requests;
 use Ozerich\FileStorage\Rules\FileRule;
 use OZiTAG\Tager\Backend\Pages\Rules\TemplateRule;
 
+/**
+ * @property string $template
+ * @property string $title
+ * @property int $parent
+ * @property string $image
+ * @property string $excerpt
+ * @property string $body
+ * @property string $datetime
+ * @property string $pageTitle
+ * @property string $pageDescription
+ * @property string $pageKeywords
+ * @property string $openGraphImage
+ * @property float $sitemapPriority
+ * @property string $sitemapFrequency
+ * @property boolean $hiddenFromSeoIndexation
+ * @property array $templateFields
+ */
 class UpdatePageRequest extends CreatePageRequest
 {
     public function rules()
@@ -24,10 +41,12 @@ class UpdatePageRequest extends CreatePageRequest
             'pageDescription' => 'nullable|string',
             'pageKeywords' => 'nullable|string',
             'openGraphImage' => ['nullable', new FileRule()],
+            'sitemapPriority' => ['nullable', 'number'],
+            'sitemapFrequency' => ['nullable', 'string'],
             'hiddenFromSeoIndexation' => ['required', 'boolean'],
-            'templateValues' => 'nullable|array',
-            'templateValues.*.field' => 'required|string',
-            'templateValues.*.value' => 'nullable',
+            'templateFields' => 'nullable|array',
+            'templateFields.*.name' => 'required|string',
+            'templateFields.*.value' => 'nullable',
         ]);
     }
 }

@@ -31,9 +31,12 @@ class BasicClonePageJob extends Job
         $newPage->excerpt = $this->page->excerpt;
         $newPage->body = $this->page->body;
         $newPage->datetime = $this->page->datetime;
+
         $newPage->page_title = $this->page->page_title;
         $newPage->page_description = $this->page->page_description;
         $newPage->page_keywords = $this->page->page_keywords;
+        $newPage->sitemap_priority = $this->page->sitemap_priority;
+        $newPage->sitemap_frequency = $this->page->sitemap_frequency;
         $newPage->hidden_from_seo_indexation = $this->page->hidden_from_seo_indexation;
 
         if ($this->page->image_id) {

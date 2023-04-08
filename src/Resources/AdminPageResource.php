@@ -15,6 +15,7 @@ class AdminPageResource extends ModelResource
             'title',
             'templateName',
             'path' => 'url_path',
+            'datetime' => 'datetime:date',
             'parent' => [
                 'relation' => 'parent',
                 'as' => [

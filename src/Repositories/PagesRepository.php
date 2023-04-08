@@ -7,11 +7,12 @@ use Illuminate\Support\Facades\DB;
 use OZiTAG\Tager\Backend\Core\Repositories\EloquentRepository;
 use OZiTAG\Tager\Backend\Core\Repositories\IFilterable;
 use OZiTAG\Tager\Backend\Core\Repositories\ISearchable;
+use OZiTAG\Tager\Backend\Core\Repositories\ISortable;
 use OZiTAG\Tager\Backend\Crud\Contracts\IRepositoryCrudTreeRepository;
 use OZiTAG\Tager\Backend\Pages\Enums\PageStatus;
 use OZiTAG\Tager\Backend\Pages\Models\TagerPage;
 
-class PagesRepository extends EloquentRepository implements IRepositoryCrudTreeRepository, ISearchable, IFilterable
+class PagesRepository extends EloquentRepository implements IRepositoryCrudTreeRepository, ISearchable, IFilterable, ISortable
 {
     public function __construct(TagerPage $model)
     {
@@ -84,6 +85,21 @@ class PagesRepository extends EloquentRepository implements IRepositoryCrudTreeR
                 ->orWhere('title', 'LIKE', '%' . $query . '%')
                 ->orWhere('url_path', 'LIKE', '%' . $query . '%');
         });
+    }
+
+
+    public function sort(?string $sort = null, Builder $builder = null): ?Builder
+    {
+        $builder = $builder ?: $this->builder();
+
+        switch ($sort) {
+            case 'date_desc':
+                return $builder->reorder('datetime', 'desc');
+            case 'date_asc':
+                return $builder->reorder('datetime', 'asc');
+            default:
+                return $builder;
+        }
     }
 
     public function filterByKey(Builder $builder, string $key, mixed $value): Builder

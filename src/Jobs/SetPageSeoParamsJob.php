@@ -15,8 +15,10 @@ class SetPageSeoParamsJob extends Job
                                 protected ?string   $title = null,
                                 protected ?string   $description = null,
                                 protected ?string   $keywords = null,
-                                protected           $openGraphImageId = null,
-                                protected           $hiddenFromSeoIndexation = false,
+                                protected ?int      $openGraphImageId = null,
+                                protected ?float    $sitemapPriority = null,
+                                protected ?string   $sitemapFrequency = null,
+                                protected bool      $hiddenFromSeoIndexation = false,
     )
     {
 
@@ -27,6 +29,8 @@ class SetPageSeoParamsJob extends Job
         $this->model->page_title = $this->title;
         $this->model->page_description = $this->description;
         $this->model->page_keywords = $this->keywords;
+        $this->model->sitemap_frequency = $this->sitemapFrequency;
+        $this->model->sitemap_priority = $this->sitemapPriority;
         $this->model->hidden_from_seo_indexation = $this->hiddenFromSeoIndexation;
 
         if ($this->openGraphImageId) {
