@@ -41,7 +41,7 @@ class UpdatePageRequest extends CreatePageRequest
             'pageDescription' => 'nullable|string',
             'pageKeywords' => 'nullable|string',
             'openGraphImage' => ['nullable', new FileRule()],
-            'sitemapPriority' => ['nullable', 'number'],
+            'sitemapPriority' => ['nullable', 'numeric', 'min' => 0, 'max' => 1],
             'sitemapFrequency' => ['nullable', 'string'],
             'hiddenFromSeoIndexation' => ['required', 'boolean'],
             'templateFields' => 'nullable|array',
