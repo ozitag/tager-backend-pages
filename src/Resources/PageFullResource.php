@@ -89,7 +89,7 @@ class PageFullResource extends JsonResource
 
                         if ($scenario) {
                             foreach ($found->files as $file) {
-                                $this->fileStorage->setFileScenario($file->id, $scenario);
+                                $this->fileStorage->setFileScenario($file->id, $scenario, false);
                             }
                         }
                     } else {
