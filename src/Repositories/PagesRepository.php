@@ -72,7 +72,7 @@ class PagesRepository extends EloquentRepository implements IRepositoryCrudTreeR
         return $query->get();
     }
 
-    public function searchByQuery(?string $query, Builder $builder = null): ?Builder
+    public function searchByQuery(?string $query, ?Builder $builder = null): ?Builder
     {
         if (empty($query)) {
             return $builder;
@@ -88,7 +88,7 @@ class PagesRepository extends EloquentRepository implements IRepositoryCrudTreeR
     }
 
 
-    public function sort(?string $sort = null, Builder $builder = null): ?Builder
+    public function sort(?string $sort = null, ?Builder $builder = null): ?Builder
     {
         $builder = $builder ?: $this->builder();
 
